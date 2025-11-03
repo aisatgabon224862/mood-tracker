@@ -1,0 +1,135 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f3f4f6;
+  background-image: image-set(
+    "./top-view-smiley-sad-faces-blue-monday-with-copy-space_23-2148756223.jpg"
+  );
+  background-size: cover;
+  background-position: 4px;
+  margin-top: 250px;
+  padding: 0;
+  color: #333;
+}
+
+.home-container {
+  border-radius: 50px;
+  border: 5px solid #0c0d10;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background-image: image-set(
+    "./incredibly-beautiful-sunset-sun-lake-sunrise-landscape-panorama-nature-sky-amazing-colorful-clouds-fantasy-design-115177001.webp"
+  );
+  background-size: contain;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #f0eeee;
+}
+
+.mood-grid {
+  display: flex;
+  flex-wrap: row;
+  justify-content: center;
+  margin-top: 50px;
+  gap: 15px;
+}
+
+.mood-card {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mood-card:hover {
+  transform: scale(1.5);
+  transition: 0;
+  background: #dddada;
+}
+
+.emoji {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.mood-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.mood-form input,
+.mood-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.mood-form input:focus,
+.mood-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.submit-btn {
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+}
+
+.back-btn {
+  display: inline-block;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
