@@ -1,9 +1,7 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f3f4f6;
-  background-image: image-set(
-    "./top-view-smiley-sad-faces-blue-monday-with-copy-space_23-2148756223.jpg"
-  );
+  background: hsl(262, 38%, 44%);
+
   background-size: cover;
   background-position: 4px;
   margin-top: 250px;
@@ -17,9 +15,7 @@ body {
   justify-content: center;
   text-align: center;
   padding: 40px;
-  background-image: image-set(
-    "./incredibly-beautiful-sunset-sun-lake-sunrise-landscape-panorama-nature-sky-amazing-colorful-clouds-fantasy-design-115177001.webp"
-  );
+  background-color: hsl(180, 100%, 20%);
   background-size: contain;
 }
 
@@ -81,6 +77,10 @@ body {
   display: block;
   margin-bottom: 15px;
   font-weight: 500;
+}
+.header {
+  color: #0c0d10;
+  text-align: end;
 }
 
 .mood-form input,

@@ -28,52 +28,64 @@ function MoodForm() {
   };
 
   return (
-    <div className="form-container">
-      <button className="back-btn" onClick={() => navigate("/")}>
-        ← Back
-      </button>
-
-      <h2 className="form-title">You are feeling {mood} today</h2>
-
-      <form onSubmit={handleSubmit} className="mood-form">
-        <label>
-          Name:
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          Section:
-          <input
-            type="text"
-            name="section"
-            placeholder="Enter your section"
-            onChange={handleChange}
-            required
-          />
-        </label>
-
-        <label>
-          Why do you feel this way?
-          <textarea
-            name="reason"
-            placeholder="Explain your feelings..."
-            rows="4"
-            onChange={handleChange}
-            required
-          ></textarea>
-        </label>
-
-        <button type="submit" className="submit-btn">
-          Submit
+    <>
+      <div className="form-container">
+        <button className="back-btn" onClick={() => navigate("/")}>
+          ← Back
         </button>
-      </form>
-    </div>
+
+        <h2 className="form-title">You are feeling {mood} today</h2>
+
+        <form onSubmit={handleSubmit} className="mood-form">
+          <label>
+            Name:
+            <input
+              type="text"
+              name="name"
+              placeholder="Enter your name"
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label>
+            Section:
+            <input
+              type="text"
+              name="section"
+              placeholder="Enter your section"
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label>
+            Why do you feel this way?
+            <textarea
+              name="explanation"
+              placeholder="Explain your feelings..."
+              rows="4"
+              onChange={handleChange}
+              required
+            ></textarea>
+          </label>
+
+          <button
+            type="submit"
+            className="submit-btn"
+            onClick={() => navigate("/")}
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+      <footer>
+        {" "}
+        <p className="header small">
+          © {new Date().getFullYear()} Mood Tracker
+        </p>{" "}
+      </footer>
+    </>
   );
 }
 export default MoodForm;
