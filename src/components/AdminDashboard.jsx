@@ -9,7 +9,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchMoods = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/moods");
+        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
         const data = await res.json();
         setMoods(data);
         setLoading(false);
