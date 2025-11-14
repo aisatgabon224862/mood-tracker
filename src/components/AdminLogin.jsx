@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-
+import logo from "../assets/logo.png";
+import deped from "../assets/deped.png";
+import image from "../assets/images.png";
+import youtube from "../assets/youtube.png";
 function AdminLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
 
@@ -26,44 +29,57 @@ function AdminLogin() {
 
   return (
     <>
-      <p className="header small">©{new Date().getFullYear()} Mood Tracker</p>
-      <div className=" border border-success-subtle container fw-bold text-primary  mb-4 p-5 m-auto ">
-        <h2 className="p-0">Admin Login</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            className="form-control mb-3"
-            required
-          />
-          <input
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Password "
-            onChange={handleChange}
-            className="form-control mb-1 "
-            required
-          />
-          <button
-            className="btn btn-outline-light btn-sm  mb-3 small "
-            type="button"
-            onClick={() => {
-              {
-                setShowPassword(!showPassword);
-              }
-            }}
-          >
-            {showPassword ? "hide" : "show"}
-          </button>
-          <br />
-          <div class="d-flex justify-content-end">
-            <button className="btn btn-info btn-lg  " type="submit">
+      <div className="d-flex justify-content-center align-items-center vh-100 bg-light mr-3">
+        {" "}
+        <img src={logo} alt="logo" className="logos" />
+        <span className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</span>
+        <img src={deped} alt="deped logo" className="deped" />
+        <div
+          id="Alogin"
+          className="card shadow-lg p-4  border-0"
+          style={{ width: "380px" }}
+        >
+          <div className="text-center mb-3">
+            <img src={logo} alt="logo" width="80" className="mb-2" />
+            <h5 className="fw-bold">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h5>
+            <img src={deped} alt="deped" width="70" className="mt-2" />
+          </div>
+
+          <h3 className="text-center text-primary mb-4">Admin Login</h3>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={handleChange}
+              className="form-control mb-3"
+              required
+            />
+
+            <div className="input-group mb-3">
+              <input
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                onChange={handleChange}
+                className="form-control"
+                required
+              />
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
+
+            <button className="btn btn-primary w-100 py-2 fw-bold">
               Login
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </>
   );

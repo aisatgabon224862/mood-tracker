@@ -1,11 +1,16 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import "../App.css";
 import { useState } from "react";
+import logo from "../assets/logo.png";
+import deped from "../assets/deped.png";
+import image from "../assets/images.png";
+import youtube from "../assets/youtube.png";
 
 function MoodForm() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const mood = searchParams.get("mood");
+  const emoji = searchParams.get("emoji");
   const [formData, setFormData] = useState({
     name: "",
     section: "",
@@ -29,12 +34,24 @@ function MoodForm() {
 
   return (
     <>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <img src={logo} alt="School Logo" style={{ width: "80px" }} />
+
+        <h1 className="fw-bold text-primary text-center m-0">
+          TROPICAL VILLAGE NATIONAL HIGH SCHOOL
+        </h1>
+
+        <img src={deped} alt="DepEd Logo" style={{ width: "100px" }} />
+      </div>
+
       <div className="form-container">
         <button className="back-btn" onClick={() => navigate("/")}>
           ← Back
         </button>
 
-        <h2 className="form-title">You are feeling {mood} today</h2>
+        <h2 className="form-title">
+          You are feeling {mood} {emoji} today
+        </h2>
 
         <form onSubmit={handleSubmit} className="mood-form">
           <label>
@@ -84,6 +101,22 @@ function MoodForm() {
         <p className="header small">
           © {new Date().getFullYear()} Mood Tracker
         </p>{" "}
+        <a
+          href="https://www.facebook.com/DepEdTayoTVNHS301223"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={image} alt="facebook" className="facebook" />
+          facebook
+        </a>
+        <a
+          href="https://www.youtube.com/@tropicalvillagenationalhig5006"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={youtube} alt="youtube" className="youtube" />
+          youtube
+        </a>
       </footer>
     </>
   );
