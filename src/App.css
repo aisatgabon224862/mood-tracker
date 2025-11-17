@@ -4,13 +4,12 @@ body {
   background-image: url("https://www.transparenttextures.com/patterns/white-carbon.png");
   min-height: 100vh;
   margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .logo-div {
+  
   display: flex;
-  align-items: center;
+  flex-direction: wrap;
+  justify-content: center;
   row-gap: -20px;
 }
 .facebook {
@@ -79,7 +78,7 @@ body {
 
 .mood-grid {
   display: flex;
-  flex-wrap: row;
+  flex-wrap: wrap;
   justify-content: center;
   margin-top: 50px;
   gap: 15px;
