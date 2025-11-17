@@ -78,24 +78,7 @@ const AdminDashboard = () => {
                     <tr key={mood._id}>
                       <td className="fw-medium">{mood.name}</td>
 
-                      <td>
-                        <span
-                          className={`badge text-white ${
-                            mood.mood === "Happy"
-                              ? "bg-success"
-                              : mood.mood === "Sad"
-                              ? "bg-secondary"
-                              : mood.mood === "Angry"
-                              ? "bg-danger"
-                              : mood.mood === "Tired"
-                              ? "bg-warning text-dark"
-                              : "bg-info"
-                          }`}
-                        >
-                          {mood.mood}
-                        </span>
-                      </td>
-
+                      <td>{mood.mood}</td>
                       <td>{mood.section}</td>
                       <td>{mood.explanation}</td>
                       <td>{new Date(mood.date).toLocaleDateString()}</td>
