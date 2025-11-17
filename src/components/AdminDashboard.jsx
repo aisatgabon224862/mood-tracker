@@ -44,7 +44,7 @@ const AdminDashboard = () => {
         <img src={deped} alt="DepEd Logo" style={{ width: "80px" }} />
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex justify-content-center align-items-center mb-4">
         <h2 className="fw-bold text-primary">
           <i className="bi bi-person-workspace me-2"></i>Admin Dashboard
         </h2>
