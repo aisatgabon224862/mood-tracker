@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import deped from "../assets/deped.png";
-import image from "../assets/images.png";
-import youtube from "../assets/youtube.png";
+
 function AdminLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
 
@@ -11,11 +10,14 @@ function AdminLogin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("https://mood-tracker-5.onrender.com/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    const res = await fetch(
+      "https://mood-tracker-5.onrender.com/api/admin/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      }
+    );
     const data = await res.json();
     if (data.token) {
       localStorage.setItem("adminToken", data.token);
