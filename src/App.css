@@ -81,7 +81,9 @@ body {
   transition: 0;
   background: #dddada;
 }
-
+.tropical {
+  background: linear-gradient(180deg, #ece9e9 0%, #45e299 80%);
+}
 .emoji {
   font-size: 2rem;
   margin-bottom: 8px;
