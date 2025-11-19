@@ -31,15 +31,15 @@ function AdminLogin() {
 
   return (
     <>
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light mr-3">
+      <div className="d-flex justify-content-center align-items-center vh-100  mr-3 mx-5">
         {" "}
-        <img src={logo} alt="logo" className="logos" />
-        <span className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</span>
-        <img src={deped} alt="deped logo" className="deped" />
+        <img src={logo} alt="logo" className="logos mt-5" />
+        <h5 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h5>
+        <img src={deped} alt="deped logo" className="deped mt-5" />
         <div
           id="Alogin"
           className="card shadow-lg p-4  border-0"
-          style={{ width: "380px" }}
+          style={{ width: "500px" }}
         >
           <div className="text-center mb-3">
             <img src={logo} alt="logo" width="80" className="mb-2" />
@@ -55,7 +55,7 @@ function AdminLogin() {
               type="email"
               placeholder="Email"
               onChange={handleChange}
-              className="form-control mb-3"
+              className="form-control mb-3 "
               required
             />
 
