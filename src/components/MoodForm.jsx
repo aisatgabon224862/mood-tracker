@@ -34,16 +34,11 @@ function MoodForm() {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <img src={logo} alt="School Logo" style={{ width: "80px" }} />
-
-        <h1 className="fw-bold text-primary text-center m-0">
-          TROPICAL VILLAGE NATIONAL HIGH SCHOOL
-        </h1>
-
-        <img src={deped} alt="DepEd Logo" style={{ width: "100px" }} />
+      <div className="d-flex justify-content-between align-items-center header-row ">
+        <img src={logo} alt="logo" className="logos mt-1" />
+        <h2 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
+        <img src={deped} alt="deped logo" className="deped " />
       </div>
-
       <div className="form-container">
         <button className="back-btn" onClick={() => navigate("/")}>
           ← Back
@@ -88,26 +83,21 @@ function MoodForm() {
           </label>
 
           <button
-            type="submit"
             className="submit-btn"
+            type="submit"
             onClick={() => navigate("/")}
           >
             Submit
           </button>
         </form>
       </div>
-      <footer>
-        {" "}
-        <p className="header small">
-          © {new Date().getFullYear()} Mood Tracker
-        </p>{" "}
+      <footer className="d-flex justify-content-end mx-5">
         <a
           href="https://www.facebook.com/DepEdTayoTVNHS301223"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src={image} alt="facebook" className="facebook" />
-          facebook
+          <img src={image} alt="facebook" className="facebook m" />
         </a>
         <a
           href="https://www.youtube.com/@tropicalvillagenationalhig5006"
@@ -115,9 +105,11 @@ function MoodForm() {
           rel="noopener noreferrer"
         >
           <img src={youtube} alt="youtube" className="youtube" />
-          youtube
-        </a>
+        </a>{" "}
       </footer>
+      <p className="header small mx-5 ">
+        © {new Date().getFullYear()} Mood Tracker
+      </p>{" "}
     </>
   );
 }
