@@ -36,7 +36,7 @@ function MoodForm() {
     <>
       <div className="d-flex justify-content-between align-items-center header-row ">
         <img src={logo} alt="logo" className="logos mt-1" />
-        <h2 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
+        <h2 className="tropical mb-5">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
         <img src={deped} alt="deped logo" className="deped " />
       </div>
       <div className="form-container">
