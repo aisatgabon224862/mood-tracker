@@ -11,7 +11,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchMoods = async () => {
       try {
-        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
+        const res = await fetch(
+          "https://mood-tracker-5.onrender.com/api/moods"
+        );
         const data = await res.json();
         setMoods(data);
         setLoading(false);
@@ -33,19 +35,9 @@ const AdminDashboard = () => {
     );
 
   return (
-    <div className="container py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <img src={logo} alt="School Logo" style={{ width: "80px" }} />
-
-        <h1 className="fw-bold text-primary text-center m-0">
-          TROPICAL VILLAGE NATIONAL HIGH SCHOOL
-        </h1>
-
-        <img src={deped} alt="DepEd Logo" style={{ width: "80px" }} />
-      </div>
-
+    <div className="container mt-5 ">
       <div className="d-flex justify-content-center align-items-center mb-4">
-        <h2 className="fw-bold text-primary">
+        <h2 className="fw-bold mx-5">
           <i className="bi bi-person-workspace me-2"></i>Admin Dashboard
         </h2>
 
