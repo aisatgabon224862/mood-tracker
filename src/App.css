@@ -1,6 +1,6 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(180deg, #4caf50 0%, #ffffff 80%);
+  background: linear-gradient(170deg, #3ba424 0%, #ffffff 90%);
   background-attachment: fixed;
   min-height: 100vh;
   margin: 0;
@@ -12,7 +12,7 @@ body {
   row-gap: -20px;
 }
 .container {
-  margin-top: -50px;
+  margin-top: -90px;
 }
 .facebook {
   justify-content: end;
@@ -82,7 +82,10 @@ body {
   background: #dddada;
 }
 .tropical {
-  background: linear-gradient(180deg, #ece9e9 0%, #45e299 80%);
+  border-style:ridge;
+  border-radius: 2px;
+  margin-top: -50px;
+  background: linear-gradient(150deg, #e4e1e1 0%, #1ce085 80%);
 }
 .emoji {
   font-size: 2rem;
@@ -91,9 +94,9 @@ body {
 
 .form-container {
   max-width: 400px;
-  margin: -70px auto 0 auto;
+  margin: -120px auto 0 auto;
   background: white;
-  padding: 25px;
+  padding: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
