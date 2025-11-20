@@ -34,7 +34,7 @@ function AdminLogin() {
       <div className="d-flex justify-content-center align-items-center vh-100  mr-3 mx-5">
         {" "}
         <img src={logo} alt="logo" className="logos mt-5" />
-        <h5 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h5>
+        <h2 className="tropical mt-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>      
         <img src={deped} alt="deped logo" className="deped mt-5" />
         <div
           id="Alogin"
