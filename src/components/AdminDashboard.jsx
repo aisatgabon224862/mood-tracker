@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import deped from "../assets/deped.png";
 
 const AdminDashboard = () => {
   const [moods, setMoods] = useState([]);
   const [loading, setLoading] = useState(true);
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMoods = async () => {
@@ -25,6 +25,28 @@ const AdminDashboard = () => {
     fetchMoods();
   }, []);
 
+  // Group by Grade Level
+  const groupByGrade = (items) => {
+    const groups = {};
+    items.forEach((item) => {
+      if (!groups[item.grade]) groups[item.grade] = [];
+      groups[item.grade].push(item);
+    });
+    return groups;
+  };
+
+  // Group by Mood within Grade
+  const groupByMood = (items) => {
+    const moodGroups = {};
+    items.forEach((item) => {
+      if (!moodGroups[item.mood]) moodGroups[item.mood] = [];
+      moodGroups[item.mood].push(item);
+    });
+    return moodGroups;
+  };
+
+  const gradeGroups = groupByGrade(moods);
+
   if (loading)
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
@@ -35,60 +57,51 @@ const AdminDashboard = () => {
     );
 
   return (
-    <div className="container mt-5 ">
+    <div className="container mt-5">
+      {/* Header */}
       <div className="d-flex justify-content-center align-items-center mb-4">
         <h2 className="fw-bold mx-5">
           <i className="bi bi-person-workspace me-2"></i>Admin Dashboard
         </h2>
-
-        <button className="btn btn-danger" onClick={() => Navigate("/admin")}>
+        <button className="btn btn-danger" onClick={() => navigate("/admin")}>
           Logout
         </button>
       </div>
 
-      <div className="card shadow-sm border-0">
-        <div className="card-header bg-primary text-white fw-semibold">
-          Student Mood Reports
-        </div>
-
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered align-middle">
-              <thead className="table-light">
-                <tr>
-                  <th>Name</th>
-                  <th>Grade Level</th>
-                  <th>Mood</th>
-                  <th>Section</th>
-                  <th>Explanation</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {moods.length > 0 ? (
-                  moods.map((mood) => (
-                    <tr key={mood._id}>
-                      <td className="fw-medium">{mood.name}</td>
-                      <td>{mood.grade}</td>
-                      <td>{mood.mood}</td>
-                      <td>{mood.section}</td>
-                      <td>{mood.explanation}</td>
-                      <td>{new Date(mood.date).toLocaleDateString()}</td>
+      {/* Display Grouped Students */}
+      {Object.keys(gradeGroups).map((grade) => {
+        const moodGroups = groupByMood(gradeGroups[grade]);
+        return (
+          <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
+            <h3 className="mb-3">Grade {grade}</h3>
+            {Object.keys(moodGroups).map((mood) => (
+              <div key={mood} className="mb-3">
+                <h5 className="text-success">{mood}</h5>
+                <table className="table table-bordered align-middle mb-3">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Name</th>
+                      <th>Section</th>
+                      <th>Explanation</th>
+                      <th>Date</th>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="text-center text-muted py-4">
-                      No student mood data found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                    {moodGroups[mood].map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.section}</td>
+                        <td>{student.explanation}</td>
+                        <td>{new Date(student.date).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
           </div>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
 };
