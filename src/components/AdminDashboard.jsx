@@ -61,7 +61,7 @@ const AdminDashboard = () => {
       {/* Header */}
       <div className="d-flex justify-content-center align-items-center mb-4">
         <h2 className="fw-bold mx-5">
-          <i className="bi bi-person-workspace me-2"></i>Admin Dashboard
+          <i className="bi bi-person-workspace me-2">Admin Dashboard</i>
         </h2>
         <button className="btn btn-danger" onClick={() => navigate("/admin")}>
           Logout
@@ -73,7 +73,7 @@ const AdminDashboard = () => {
         const moodGroups = groupByMood(gradeGroups[grade]);
         return (
           <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3 className="mb-3">Grade {grade}</h3>
+            <h3 className="mb-3"> {grade}</h3>
             {Object.keys(moodGroups).map((mood) => (
               <div key={mood} className="mb-3">
                 <h5 className="text-success">{mood}</h5>
