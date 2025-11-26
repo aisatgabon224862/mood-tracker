@@ -18,6 +18,7 @@ const moodSchema = new mongoose.Schema({
   name: String,
   mood: String,
   section: String,
+  grade: String,
   explanation: String,
   date: { type: Date, default: Date.now },
 });
@@ -26,13 +27,13 @@ const Mood = mongoose.model("Mood", moodSchema);
 app.post("/submit", async (req, res) => {
   console.log("Recieved:", req.body);
   try {
-    const { name, section, explanation, mood } = req.body;
-    if (!name || !section || !explanation || !mood) {
+    const { name, section, explanation, mood, grade } = req.body;
+    if (!name || !section || !explanation || !mood || !grade) {
       console.log("Missing field(s):", { name, section, explanation, mood });
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newMood = new Mood({ name, section, explanation, mood });
+    const newMood = new Mood({ name, section, explanation, grade, mood });
     await newMood.save();
 
     res.json({ message: "Mood submitted successfully" });
