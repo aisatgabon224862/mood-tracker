@@ -31,7 +31,11 @@ function MoodForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.name.trim() || !formData.section.trim() || !formData.explanation.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.section.trim() ||
+      !formData.explanation.trim()
+    ) {
       alert("Please fill in all fields.");
       return;
     }
@@ -54,7 +58,7 @@ function MoodForm() {
       navigate("/");
     } catch (error) {
       console.error("Submit error:", error);
-      alert("Failed to submit. Please check the console/network.");
+      alert("Failed to submit. Please check console/network.");
     } finally {
       setSubmitting(false);
     }
@@ -77,10 +81,12 @@ function MoodForm() {
           </button>
 
           <h2 className="form-title">
-            You are feeling <span className="mood-highlight">{mood}</span> {emoji} today
+            You are feeling{" "}
+            <span className="mood-highlight">{mood}</span> {emoji} today
           </h2>
 
           <form onSubmit={handleSubmit} className="mood-form">
+            {/* Name */}
             <label>
               Name:
               <input
@@ -92,6 +98,7 @@ function MoodForm() {
               />
             </label>
 
+            {/* Section */}
             <label>
               Section:
               <input
@@ -99,4 +106,76 @@ function MoodForm() {
                 name="section"
                 placeholder="Enter your section"
                 value={formData.section}
-                onChange
+                onChange={handleChange}
+              />
+            </label>
+
+            {/* Grade */}
+            <label>
+              Grade Level:
+              <select
+                name="grade"
+                value={formData.grade}
+                onChange={handleChange}
+              >
+                <option value="">Select your grade</option>
+                <option value="Grade 12">Grade 12</option>
+                <option value="Grade 11">Grade 11</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 9">Grade 9</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 7">Grade 7</option>
+              </select>
+            </label>
+
+            {/* Explanation */}
+            <label>
+              Why do you feel this way?
+              <textarea
+                name="explanation"
+                placeholder="Explain your feelings..."
+                rows="4"
+                value={formData.explanation}
+                onChange={handleChange}
+              />
+            </label>
+
+            {/* Submit */}
+            <button
+              className="submit-btn"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? "Submitting..." : "Submit"}
+            </button>
+          </form>
+        </div>
+
+        {/* Footer icons */}
+        <footer className="d-flex justify-content-center mt-4 gap-3">
+          <a
+            href="https://www.facebook.com/DepEdTayoTVNHS301223"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={logos} alt="facebook" className="facebook" />
+          </a>
+
+          <a
+            href="https://www.youtube.com/@tropicalvillagenationalhig5006"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={youtube} alt="youtube" className="youtube" />
+          </a>
+        </footer>
+
+        <p className="header small text-center mt-2">
+          © {new Date().getFullYear()} Mood Tracker
+        </p>
+      </div>
+    </>
+  );
+}
+
+export default MoodForm;
