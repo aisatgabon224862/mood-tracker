@@ -17,7 +17,11 @@ function Home() {
 
   return (
     <>
+<<<<<<< HEAD
       <div id="bg"className="d-flex justify-content-between align-items-center header-row ">
+=======
+      <div className="d-flex justify-content-between align-items-center header-row ">
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
         <img src={logo} alt="logo" className="logos mt-1" />
         <h2 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
         <img src={deped} alt="deped logo" className="deped " />

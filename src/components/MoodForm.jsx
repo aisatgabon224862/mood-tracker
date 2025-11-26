@@ -71,7 +71,11 @@ function MoodForm() {
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center header-row">
         <img src={logo} alt="logo" className="logos mt-1" />
+<<<<<<< HEAD
         <h2 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
+=======
+        <h3 className="tropical mb-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h3>
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
         <img src={deped} alt="deped logo" className="deped" />
       </div>
 

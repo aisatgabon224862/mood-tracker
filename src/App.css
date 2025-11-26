@@ -1,7 +1,11 @@
 /* GLOBAL */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+<<<<<<< HEAD
   background-image: url("C:\Users\Admin\Downloads\mood-tracker-main\mood-tracker-main\src\assets\bg.png");
+=======
+  background-image: url("../src/assets/bg.png");
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -9,6 +13,7 @@ body {
   margin: 0;
 }
 
+<<<<<<< HEAD
 
 
 /* School logos LEFT & RIGHT */
@@ -26,16 +31,44 @@ body {
 .header-row {
   background: linear-gradient(180deg, rgb(1, 179, 43) 0%, rgb(38, 135, 49) 90%);
   padding: 10px 15px;
+=======
+/* HEADER */
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* School logos LEFT & RIGHT */
+.logos,
+.deped {
+  width: clamp(80px, 18vw, 150px);
+  height: auto;
+}
+
+/* SCHOOL NAME */
+.tropical {
+  background: linear-gradient(180deg, rgb(3, 33, 3) 0%, green 90%);
+  padding: 10px 15px;
+  border-radius: 8px;
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
   font-size: clamp(18px, 4vw, 38px);
   font-weight: 700;
   color: white;
   text-align: center;
   flex-grow: 1;
+<<<<<<< HEAD
   margin: 0 0px; display: flex;
   justify-content: space-between;
   padding: 10px 20px;
   flex-wrap: wrap;
   gap: 10px;
+=======
+  margin: 0 10px;
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
 }
 
 /* MAIN QUESTION */
@@ -75,6 +108,7 @@ body {
   margin-top: 30px;
 }
 
+<<<<<<< HEAD
 .facebook{
   margin-left: -10px;
   margin-top: -3px;
@@ -83,6 +117,11 @@ body {
 }
 .youtube {
   width: clamp(40px, 10vw, 40px);
+=======
+.facebook,
+.youtube {
+  width: clamp(40px, 10vw, 75px);
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
   height: auto;
 }
 
@@ -138,7 +177,11 @@ body {
   padding: 22px;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+<<<<<<< HEAD
   margin-top: 50px;
+=======
+  margin-top: -70px;
+>>>>>>> e9ff04f427a04ed4362eda9a182948147d4841e3
   color: #ffffff;
 }
 
