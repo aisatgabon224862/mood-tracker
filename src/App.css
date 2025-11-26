@@ -109,7 +109,7 @@ body {
 }
 
 .youtube {
-  width: clamp(50px, 10vw, 75px);
+  width: clamp(50px, 10vw, 60px);
   height: auto;
   transition: 0.25s ease;
 }
