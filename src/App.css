@@ -188,6 +188,7 @@ body {
 }
 
 .form-title {
+  text-align: center;
   margin: 0 0 12px;
   font-size: clamp(20px, 3.5vw, 30px);
   font-weight: 700;
