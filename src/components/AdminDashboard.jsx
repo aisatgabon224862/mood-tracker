@@ -69,7 +69,7 @@ const AdminDashboard = () => {
                   moods.map((mood) => (
                     <tr key={mood._id}>
                       <td className="fw-medium">{mood.name}</td>
-
+                      <td>{mood.grade}</td>
                       <td>{mood.mood}</td>
                       <td>{mood.section}</td>
                       <td>{mood.explanation}</td>
