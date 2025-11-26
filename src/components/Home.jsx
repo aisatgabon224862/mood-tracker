@@ -19,17 +19,17 @@ function Home() {
   return (
     <>
       {/* HEADER */}
-      <div className="header-container d-flex justify-content-between align-items-center shadow-sm">
+      <div className="header-row">
         <img src={logo} alt="logo" className="logos" />
-        <h2 className="school-title text-center">
-          TROPICAL VILLAGE NATIONAL HIGH SCHOOL
-        </h2>
+        <h2 className="tropical">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>
         <img src={deped} alt="deped logo" className="deped" />
       </div>
 
       {/* MAIN */}
-      <div className="container text-center py-5 fade-in">
-        <h1 className="fw-bold mb-5 feeling-title">How are you feeling today?</h1>
+      <div className="container text-center py-5 fadeIn">
+        <h1 id="feel" className="fw-bold mb-4">
+          How are you feeling today?
+        </h1>
 
         <div className="row justify-content-center g-4">
           {moods.map((mood) => (
@@ -47,24 +47,22 @@ function Home() {
           ))}
         </div>
 
-        <p className="copyright">
-          © {new Date().getFullYear()} Mood Tracker
-        </p>
+        <p className="small">© {new Date().getFullYear()} Mood Tracker</p>
 
-        <footer className="footer-icons">
+        <footer className="foot-er mb-3">
           <a
             href="https://www.facebook.com/DepEdTayoTVNHS301223"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={logos} alt="facebook" className="social-icon" />
+            <img src={logos} alt="facebook" className="facebook" />
           </a>
           <a
             href="https://www.youtube.com/@tropicalvillagenationalhig5006"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={youtube} alt="youtube" className="social-icon" />
+            <img src={youtube} alt="youtube" className="youtube" />
           </a>
         </footer>
       </div>
