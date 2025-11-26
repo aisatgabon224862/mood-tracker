@@ -57,6 +57,7 @@ const AdminDashboard = () => {
               <thead className="table-light">
                 <tr>
                   <th>Name</th>
+                  <th>Grade Level</th>
                   <th>Mood</th>
                   <th>Section</th>
                   <th>Explanation</th>
