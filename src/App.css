@@ -1,7 +1,7 @@
 /* GLOBAL */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-image: url("/home/ftgabon/mood-tracker-main (2)/mood-tracker-main/src/assets/bg.png");
+  background-image: url("../src/assets/bg.png");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
