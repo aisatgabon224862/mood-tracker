@@ -25,7 +25,7 @@ const moodSchema = new mongoose.Schema({
 const Mood = mongoose.model("Mood", moodSchema);
 
 app.post("/submit", async (req, res) => {
-  console.log("Recieved:", req.body);
+  console.log("Received:", req.body);
   try {
     const { name, section, explanation, mood, grade } = req.body;
     if (!name || !section || !explanation || !mood || !grade) {
@@ -42,6 +42,21 @@ app.post("/submit", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// DELETE BUTTON
+app.delete("/delete/:id", async (req, res) => {
+  try {
+    const result = await MoodModel.findByIdAndDelete(req.params.id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Entry not found" });
+    }
+
+    res.json({ message: "Entry deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting entry" });
+  }
+});
+
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
