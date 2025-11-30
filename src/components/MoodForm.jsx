@@ -1,181 +1,90 @@
-import { useSearchParams, useNavigate } from "react-router-dom";
-import "../App.css";
-import { useState } from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo.png";
 import deped from "../assets/deped.png";
-import logos from "../assets/logos.png";
-import youtube from "../assets/youtube.png";
 
-function MoodForm() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+function AdminLogin() {
+  const [form, setForm] = useState({ email: "", password: "" });
 
-  // decode emoji from URL
-  const mood = searchParams.get("mood") || "";
-  const rawEmoji = searchParams.get("emoji") || "";
-  const emoji = decodeURIComponent(rawEmoji);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    section: "",
-    explanation: "",
-    grade: "",
-  });
-
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (
-      !formData.name.trim() ||
-      !formData.section.trim() ||
-      !formData.explanation.trim()
-    ) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    setSubmitting(true);
-
-    try {
-      const response = await fetch("https://mood-tracker-5.onrender.com/submit", {
+    const res = await fetch(
+      "https://mood-tracker-5.onrender.com/api/admin/login",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, mood }),
-      });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
+        body: JSON.stringify(form),
       }
-
-      const data = await response.json();
-      alert(data?.message || "Submitted successfully");
-      navigate("/");
-    } catch (error) {
-      console.error("Submit error:", error);
-      alert("Failed to submit. Please check console/network.");
-    } finally {
-      setSubmitting(false);
+    );
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem("adminToken", data.token);
+      window.location.href = "admin/dashboard";
+    } else {
+      alert("Invalid email or password");
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <>
-      {/* Header */}
-      <div className="d-flex justify-content-between align-items-center header-row">
-        <img src={logo} alt="logo" className="logos mt-1" />
-        <h3 className="tropical mb-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h3>
-        <img src={deped} alt="deped logo" className="deped" />
-      </div>
+      <div className="d-flex justify-content-center align-items-center vh-100  mr-3 mx-5">
+        {" "}
+        <img src={logo} alt="logo" className="logos mt-5" />
+        <h2 className="tropical mt-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>      
+        <img src={deped} alt="deped logo" className="deped mt-5" />
+        <div
+          id="Alogin"
+          className="card shadow-lg p-4  border-0"
+          style={{ width: "500px" }}
+        >
+          <div className="text-center mb-3">
+            <img src={logo} alt="logo" width="80" className="mb-2" />
+            <h5 className="fw-bold">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h5>
+            <img src={deped} alt="deped" width="70" className="mt-2" />
+          </div>
 
-      {/* Form Wrapper */}
-      <div className="form-wrapper">
-        <div className="form-container">
-          <button className="back-btn" onClick={() => navigate("/")}>
-            ← Back
-          </button>
+          <h3 className="text-center text-primary mb-4">Admin Login</h3>
 
-          <h2 className="form-title">
-            You are feeling{" "}
-            <span className="mood-highlight">{mood}</span> {emoji} today
-          </h2>
+          <form onSubmit={handleSubmit}>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={handleChange}
+              className="form-control mb-3 "
+              required
+            />
 
-          <form onSubmit={handleSubmit} className="mood-form">
-            {/* Name */}
-            <label>
-              Name:
+            <div className="input-group mb-3">
               <input
-                type="text"
-                name="name"
-                placeholder="Enter your name"
-                value={formData.name}
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
                 onChange={handleChange}
+                className="form-control"
+                required
               />
-            </label>
-
-            {/* Section */}
-            <label>
-              Section:
-              <input
-                type="text"
-                name="section"
-                placeholder="Enter your section"
-                value={formData.section}
-                onChange={handleChange}
-              />
-            </label>
-
-            {/* Grade */}
-            <label>
-              Grade Level:
-              <select
-                name="grade"
-                value={formData.grade}
-                onChange={handleChange}
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                <option value="">Select your grade</option>
-                <option value="Grade 12">Grade 12</option>
-                <option value="Grade 11">Grade 11</option>
-                <option value="Grade 10">Grade 10</option>
-                <option value="Grade 9">Grade 9</option>
-                <option value="Grade 8">Grade 8</option>
-                <option value="Grade 7">Grade 7</option>
-              </select>
-            </label>
+                {showPassword ? "Hide" : "Show"}
+              </button>
+            </div>
 
-            {/* Explanation */}
-            <label>
-              Why do you feel this way?
-              <textarea
-                name="explanation"
-                placeholder="Explain your feelings..."
-                rows="4"
-                value={formData.explanation}
-                onChange={handleChange}
-              />
-            </label>
-
-            {/* Submit */}
-            <button
-              className="submit-btn"
-              type="submit"
-              disabled={submitting}
-            >
-              {submitting ? "Submitting..." : "Submit"}
+            <button className="btn btn-primary w-100 py-2 fw-bold">
+              Login
             </button>
           </form>
         </div>
-
-        {/* Footer icons */}
-        <footer className="d-flex justify-content-center mt-4 gap-3">
-          <a
-            href="https://www.facebook.com/DepEdTayoTVNHS301223"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src={logos} alt="facebook" className="facebook" />
-          </a>
-
-          <a
-            href="https://www.youtube.com/@tropicalvillagenationalhig5006"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src={youtube} alt="youtube" className="youtube" />
-          </a>
-        </footer>
-
-        <p className="header small text-center mt-2">
-          © {new Date().getFullYear()} Mood Tracker
-        </p>
       </div>
     </>
   );
 }
 
-export default MoodForm;
+export default AdminLogin;
