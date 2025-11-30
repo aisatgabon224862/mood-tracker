@@ -10,10 +10,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Admin routes
+// Admin routes
 app.use("/api/admin", adminRoutes);
 
-// ✅ Mood Schema
+//  Mood Schema
 const moodSchema = new mongoose.Schema({
   name: String,
   mood: String,
