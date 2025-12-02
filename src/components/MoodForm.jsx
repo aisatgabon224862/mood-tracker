@@ -1,135 +1,181 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import "../App.css";
+import { useState } from "react";
+import logo from "../assets/logo.png";
+import deped from "../assets/deped.png";
+import logos from "../assets/logos.png";
+import youtube from "../assets/youtube.png";
 
-const AdminDashboard = () => {
-  const [moods, setMoods] = useState([]);
-  const [loading, setLoading] = useState(true);
+function MoodForm() {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchMoods = async () => {
-      try {
-        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
-        const data = await res.json();
-        setMoods(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch moods:", error);
-      }
-    };
+  // decode emoji from URL
+  const mood = searchParams.get("mood") || "";
+  const rawEmoji = searchParams.get("emoji") || "";
+  const emoji = decodeURIComponent(rawEmoji);
 
-    fetchMoods();
-  }, []);
+  const [formData, setFormData] = useState({
+    name: "",
+    section: "",
+    explanation: "",
+    grade: "",
+  });
 
-  //  DELETE FUNCTION
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
-    if (!confirmDelete) return;
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.name.trim() ||
+      !formData.section.trim() ||
+      !formData.explanation.trim()
+    ) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    setSubmitting(true);
 
     try {
-      const res = await fetch(`https://mood-tracker-5.onrender.com/delete/${id}`, {
-        method: "DELETE",
+      const response = await fetch("https://mood-tracker-5.onrender.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, mood }),
       });
 
-      const data = await res.json();
-      alert(data.message);
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
 
-      // Remove the deleted item 
-      setMoods((prev) => prev.filter((item) => item._id !== id));
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Failed to delete entry.");
+      const data = await response.json();
+      alert(data?.message || "Submitted successfully");
+      navigate("/");
+    } catch (error) {
+      console.error("Submit error:", error);
+      alert("Failed to submit. Please check console/network.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  // Group by Grade Level
-  const groupByGrade = (items) => {
-    const groups = {};
-    items.forEach((item) => {
-      if (!groups[item.grade]) groups[item.grade] = [];
-      groups[item.grade].push(item);
-    });
-    return groups;
-  };
-
-  // Group by Mood
-  const groupByMood = (items) => {
-    const moodGroups = {};
-    items.forEach((item) => {
-      if (!moodGroups[item.mood]) moodGroups[item.mood] = [];
-      moodGroups[item.mood].push(item);
-    });
-    return moodGroups;
-  };
-
-  const gradeGroups = groupByGrade(moods);
-
-  if (loading)
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-
   return (
-    <div className="container mt-5">
+    <>
       {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="bi bi-person-workspace me-2"></i> Admin Dashboard
-        </h2>
-        <button className="btn btn-danger" onClick={() => navigate("/admin")}>
-          Logout
-        </button>
+      <div className=" d-flex justify-content-between align-items-center header-row">
+        <img src={logo} alt="logo" className="logos mt-1" />
+        <h3 className="tropical mb-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h3>
+        <img src={deped} alt="deped logo" className="deped" />
       </div>
 
-      {/* Display Grouped Students */}
-      {Object.keys(gradeGroups).map((grade) => {
-        const moodGroups = groupByMood(gradeGroups[grade]);
-        return (
-          <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3 className="grade">{grade}</h3>
-            {Object.keys(moodGroups).map((mood) => (
-              <div key={mood} className="mb-3">
-                <h5 className="moody_1">{mood}</h5>
-                <table className="table table-bordered align-middle">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Name</th>
-                      <th>Section</th>
-                      <th>Explanation</th>
-                      <th>Date</th>
-                      <th>Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {moodGroups[mood].map((student) => (
-                      <tr key={student._id}>
-                        <td>{student.name}</td>
-                        <td>{student.section}</td>
-                        <td>{student.explanation}</td>
-                        <td>{new Date(student.date).toLocaleDateString()}</td>
-                        <td>
-                          <button
-                            className="delete-icon-btn"
-                            onClick={() => handleDelete(student._id)}
-                          >
-                            🗑️
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
+      {/* Form Wrapper */}
+      <div className="form-wrapper">
+        <div className="form-container">
+          <button className="back-btn" onClick={() => navigate("/")}>
+            ← Back
+          </button>
 
-export default AdminDashboard;
+          <h2 className="form-title">
+            You are feeling{" "}
+            <span className="mood-highlight">{mood}</span> {emoji} today
+          </h2>
+
+          <form onSubmit={handleSubmit} className="mood-form">
+            {/* Name */}
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </label>
+
+            {/* Section */}
+            <label>
+              Section:
+              <input
+                type="text"
+                name="section"
+                placeholder="Enter your section"
+                value={formData.section}
+                onChange={handleChange}
+              />
+            </label>
+
+            {/* Grade */}
+            <label>
+              Grade Level:
+              <select
+                name="grade"
+                value={formData.grade}
+                onChange={handleChange}
+              >
+                <option value="">Select your grade</option>
+                <option value="Grade 12">Grade 12</option>
+                <option value="Grade 11">Grade 11</option>
+                <option value="Grade 10">Grade 10</option>
+                <option value="Grade 9">Grade 9</option>
+                <option value="Grade 8">Grade 8</option>
+                <option value="Grade 7">Grade 7</option>
+              </select>
+            </label>
+
+            {/* Explanation */}
+            <label>
+              Why do you feel this way?
+              <textarea
+                name="explanation"
+                placeholder="Explain your feelings..."
+                rows="4"
+                value={formData.explanation}
+                onChange={handleChange}
+              />
+            </label>
+
+            {/* Submit */}
+            <button
+              className="submit-btn"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? "Submitting..." : "Submit"}
+            </button>
+          </form>
+        </div>
+
+        {/* Footer icons */}
+        <footer className="d-flex justify-content-center mt-4 gap-3">
+          <a
+            href="https://www.facebook.com/DepEdTayoTVNHS301223"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={logos} alt="facebook" className="facebook" />
+          </a>
+
+          <a
+            href="https://www.youtube.com/@tropicalvillagenationalhig5006"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={youtube} alt="youtube" className="youtube" />
+          </a>
+        </footer>
+
+        <p className="header small text-center mt-2">
+          © {new Date().getFullYear()} Mood Tracker
+        </p>
+      </div>
+    </>
+  );
+}
+
+export default MoodForm;
