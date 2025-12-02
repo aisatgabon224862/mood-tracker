@@ -112,18 +112,6 @@ function MoodForm() {
                 <option value="Grade12">Grade 12</option>
               </select>
             </label>
-
-            {/* Explanation */}
-            <label>
-              Why do you feel this way?
-              <textarea
-                name="explanation"
-                placeholder="Explain your feelings..."
-                rows="4"
-                value={formData.explanation}
-                onChange={handleChange}
-              />
-            </label>
             {/* Section */}
             <label>
               Section:
@@ -137,8 +125,17 @@ function MoodForm() {
               />
             </label>
 
-            
-
+            {/* Explanation */}
+            <label>
+              Why do you feel this way?
+              <textarea
+                name="explanation"
+                placeholder="Explain your feelings..."
+                rows="4"
+                value={formData.explanation}
+                onChange={handleChange}
+              />
+            </label>
             {/* Submit */}
             <button
               className="submit-btn"
