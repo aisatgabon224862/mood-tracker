@@ -5,6 +5,9 @@ const AdminDashboard = () => {
   const [moods, setMoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [selectedGrade, setSelectedGrade] = useState("All");
+ const [selectedMood, setSelectedMood] = useState("All");
+
 
   useEffect(() => {
     const fetchMoods = async () => {
@@ -62,7 +65,15 @@ const AdminDashboard = () => {
     return moodGroups;
   };
 
-  const gradeGroups = groupByGrade(moods);
+ // FILTER LOGIC
+const filteredMoods = moods.filter((item) => {
+  const gradeMatch = selectedGrade === "All" || item.grade === selectedGrade;
+  const moodMatch = selectedMood === "All" || item.mood === selectedMood;
+  return gradeMatch && moodMatch;
+});
+
+const gradeGroups = groupByGrade(filteredMoods);
+
 
   if (loading)
     return (
@@ -84,6 +95,38 @@ const AdminDashboard = () => {
           Logout
         </button>
       </div>
+<div className="d-flex gap-3 mb-4">
+  
+  {/* Grade Level Filter */}
+  <select
+    className="form-select w-auto"
+    value={selectedGrade}
+    onChange={(e) => setSelectedGrade(e.target.value)}
+  >
+    <option value="All">All Grades</option>
+    {Object.keys(gradeGroups).map((grade) => (
+      <option key={grade} value={grade}>
+        {grade}
+      </option>
+    ))}
+  </select>
+
+  {/* Mood Filter */}
+  <select
+    className="form-select w-auto"
+    value={selectedMood}
+    onChange={(e) => setSelectedMood(e.target.value)}
+  >
+    <option value="All">All Moods</option>
+    {/* Auto-generate mood list */}
+    {[...new Set(moods.map((item) => item.mood))].map((mood) => (
+      <option key={mood} value={mood}>
+        {mood}
+      </option>
+    ))}
+  </select>
+
+</div>
 
       {/* Display Grouped Students */}
       {Object.keys(gradeGroups).map((grade) => {
