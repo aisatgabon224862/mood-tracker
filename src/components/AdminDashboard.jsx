@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-import deped from "../assets/deped.png";
 
 const AdminDashboard = () => {
   const [moods, setMoods] = useState([]);
@@ -103,7 +101,7 @@ const AdminDashboard = () => {
                       <th>Section</th>
                       <th>Explanation</th>
                       <th>Date</th>
-                      <th>Action</th> {/*  Added Delete Column */}
+                      <th>Remove</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -118,7 +116,7 @@ const AdminDashboard = () => {
                             className="delete-icon-btn"
                             onClick={() => handleDelete(student._id)}
                           >
-                            Delete
+                            🗑️
                           </button>
                         </td>
                       </tr>
