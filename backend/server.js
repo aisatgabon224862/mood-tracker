@@ -63,7 +63,7 @@ app.delete("/delete/:id", async (req, res) => {
 app.get("/", (req, res) => res.send("Server is running"));
 
 // Route your dashboard fetches
-app.get("/api/moods", verifyToken, async (req, res) => {
+router.get("/api/moods", verifyToken, async (req, res) => {
   try {
     const moods = await Mood.find();
     res.json(moods);
