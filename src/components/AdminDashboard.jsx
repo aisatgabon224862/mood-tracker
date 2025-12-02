@@ -12,7 +12,13 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchMoods = async () => {
       try {
-        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
+       const res = await fetch("https://mood-tracker-5.onrender.com/api/moods", {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+  },
+});
+        
         const data = await res.json();
         setMoods(data);
         setLoading(false);
@@ -65,7 +71,7 @@ const AdminDashboard = () => {
     return moodGroups;
   };
 
- // FILTER LOGIC
+ // FILTER 
 const filteredMoods = moods.filter((item) => {
   const gradeMatch = selectedGrade === "All" || item.grade === selectedGrade;
   const moodMatch = selectedMood === "All" || item.mood === selectedMood;
