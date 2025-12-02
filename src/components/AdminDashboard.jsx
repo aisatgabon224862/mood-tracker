@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const AdminDashboard = () => {
   const [moods, setMoods] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  
   const [selectedGrade, setSelectedGrade] = useState("All");
- const [selectedMood, setSelectedMood] = useState("All");
-
+  const [selectedMood, setSelectedMood] = useState("All");
 
   useEffect(() => {
-    const fetchMoods = async () => {
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    navigate("/admin"); // redirect to login page
+  }
+}, [navigate]);
+
+  useEffect(() => {
+    const fetchMoods = async () => {  
       try {
        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods", {
-  headers: {
+    headers: {
     "Content-Type": "application/json",
     Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-  },
-});
-        
+     },
+    });     
         const data = await res.json();
         setMoods(data);
         setLoading(false);
@@ -29,6 +36,7 @@ const AdminDashboard = () => {
 
     fetchMoods();
   }, []);
+  
 
   //  DELETE FUNCTION
   const handleDelete = async (id) => {
