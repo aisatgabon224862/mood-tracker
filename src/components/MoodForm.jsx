@@ -1,90 +1,135 @@
-import React, { useState } from "react";
-import logo from "../assets/logo.png";
-import deped from "../assets/deped.png";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function AdminLogin() {
-  const [form, setForm] = useState({ email: "", password: "" });
+const AdminDashboard = () => {
+  const [moods, setMoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch(
-      "https://mood-tracker-5.onrender.com/api/admin/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+  useEffect(() => {
+    const fetchMoods = async () => {
+      try {
+        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
+        const data = await res.json();
+        setMoods(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch moods:", error);
       }
-    );
-    const data = await res.json();
-    if (data.token) {
-      localStorage.setItem("adminToken", data.token);
-      window.location.href = "admin/dashboard";
-    } else {
-      alert("Invalid email or password");
+    };
+
+    fetchMoods();
+  }, []);
+
+  //  DELETE FUNCTION
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`https://mood-tracker-5.onrender.com/delete/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+      alert(data.message);
+
+      // Remove the deleted item 
+      setMoods((prev) => prev.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete entry.");
     }
   };
 
-  const [showPassword, setShowPassword] = useState(false);
+  // Group by Grade Level
+  const groupByGrade = (items) => {
+    const groups = {};
+    items.forEach((item) => {
+      if (!groups[item.grade]) groups[item.grade] = [];
+      groups[item.grade].push(item);
+    });
+    return groups;
+  };
 
-  return (
-    <>
-      <div className="d-flex justify-content-center align-items-center vh-100  mr-3 mx-5">
-        {" "}
-        <img src={logo} alt="logo" className="logos mt-5" />
-        <h2 className="tropical mt-4">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h2>      
-        <img src={deped} alt="deped logo" className="deped mt-5" />
-        <div
-          id="Alogin"
-          className="card shadow-lg p-4  border-0"
-          style={{ width: "500px" }}
-        >
-          <div className="text-center mb-3">
-            <img src={logo} alt="logo" width="80" className="mb-2" />
-            <h5 className="fw-bold">TROPICAL VILLAGE NATIONAL HIGH SCHOOL</h5>
-            <img src={deped} alt="deped" width="70" className="mt-2" />
-          </div>
+  // Group by Mood
+  const groupByMood = (items) => {
+    const moodGroups = {};
+    items.forEach((item) => {
+      if (!moodGroups[item.mood]) moodGroups[item.mood] = [];
+      moodGroups[item.mood].push(item);
+    });
+    return moodGroups;
+  };
 
-          <h3 className="text-center text-primary mb-4">Admin Login</h3>
+  const gradeGroups = groupByGrade(moods);
 
-          <form onSubmit={handleSubmit}>
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              onChange={handleChange}
-              className="form-control mb-3 "
-              required
-            />
-
-            <div className="input-group mb-3">
-              <input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                onChange={handleChange}
-                className="form-control"
-                required
-              />
-              <button
-                type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? "Hide" : "Show"}
-              </button>
-            </div>
-
-            <button className="btn btn-primary w-100 py-2 fw-bold">
-              Login
-            </button>
-          </form>
+  if (loading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
-    </>
-  );
-}
+    );
 
-export default AdminLogin;
+  return (
+    <div className="container mt-5">
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold">
+          <i className="bi bi-person-workspace me-2"></i> Admin Dashboard
+        </h2>
+        <button className="btn btn-danger" onClick={() => navigate("/admin")}>
+          Logout
+        </button>
+      </div>
+
+      {/* Display Grouped Students */}
+      {Object.keys(gradeGroups).map((grade) => {
+        const moodGroups = groupByMood(gradeGroups[grade]);
+        return (
+          <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
+            <h3 className="grade">{grade}</h3>
+            {Object.keys(moodGroups).map((mood) => (
+              <div key={mood} className="mb-3">
+                <h5 className="moody_1">{mood}</h5>
+                <table className="table table-bordered align-middle">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Name</th>
+                      <th>Section</th>
+                      <th>Explanation</th>
+                      <th>Date</th>
+                      <th>Remove</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {moodGroups[mood].map((student) => (
+                      <tr key={student._id}>
+                        <td>{student.name}</td>
+                        <td>{student.section}</td>
+                        <td>{student.explanation}</td>
+                        <td>{new Date(student.date).toLocaleDateString()}</td>
+                        <td>
+                          <button
+                            className="delete-icon-btn"
+                            onClick={() => handleDelete(student._id)}
+                          >
+                            🗑️
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default AdminDashboard;
