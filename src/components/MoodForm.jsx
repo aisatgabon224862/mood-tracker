@@ -5,6 +5,7 @@ import logo from "../assets/logo.png";
 import deped from "../assets/deped.png";
 import logos from "../assets/logos.png";
 import youtube from "../assets/youtube.png";
+import { Container } from "postcss";
 
 function MoodForm() {
   const [searchParams] = useSearchParams();
@@ -31,7 +32,7 @@ function MoodForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   if (
+    if (
       !formData.section.trim() 
     ) {
       alert("Please fill in your section.");
@@ -82,7 +83,6 @@ function MoodForm() {
             You are feeling{" "}
             <span className="mood-highlight">{mood}</span> {emoji} today
           </h2>
-
           <form onSubmit={handleSubmit} className="mood-form">
             {/* Name */}
             <label>
@@ -95,19 +95,6 @@ function MoodForm() {
                 onChange={handleChange}
               />
             </label>
-
-            {/* Section */}
-            <label>
-              Section:
-              <input
-                type="text"
-                name="section"
-                placeholder="Enter your section"
-                value={formData.section}
-                onChange={handleChange}
-              />
-            </label>
-
             {/* Grade */}
             <label>
               Grade Level:
@@ -117,12 +104,12 @@ function MoodForm() {
                 onChange={handleChange}
               >
                 <option value="">Select your grade</option>
-                <option value="Grade 12">Grade 12</option>
-                <option value="Grade 11">Grade 11</option>
-                <option value="Grade 10">Grade 10</option>
-                <option value="Grade 9">Grade 9</option>
-                <option value="Grade 8">Grade 8</option>
-                <option value="Grade 7">Grade 7</option>
+                <option value="Grade7">Grade 7</option>
+                <option value="Grade8">Grade 8</option>
+                <option value="Grade9">Grade 9</option>
+                <option value="Grade19">Grade 10</option>
+                <option value="Grade11">Grade 11</option>
+                <option value="Grade12">Grade 12</option>
               </select>
             </label>
 
@@ -137,6 +124,20 @@ function MoodForm() {
                 onChange={handleChange}
               />
             </label>
+            {/* Section */}
+            <label>
+              Section:
+              <input
+                type="text"
+                name="section"
+                placeholder="Enter your section"
+                value={formData.section}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            
 
             {/* Submit */}
             <button
