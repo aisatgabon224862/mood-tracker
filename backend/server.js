@@ -28,9 +28,9 @@ app.post("/submit", async (req, res) => {
   console.log("Received:", req.body);
   try {
     const { name, section, explanation, mood, grade } = req.body;
-    if (!name || !section || !explanation || !mood || !grade) {
-      console.log("Missing field(s):", { name, section, explanation, mood });
-      return res.status(400).json({ message: "All fields are required" });
+    if (  !section || !mood ) {
+      console.log("Missing field(s):", {  section, mood });
+      return res.status(400).json({ message: "Your section is required" });
     }
 
     const newMood = new Mood({ name, section, explanation, grade, mood });
