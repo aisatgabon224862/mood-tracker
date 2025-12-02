@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
+import verifyToken from "./routes/middleware/auth.js";
 
 dotenv.config();
 
@@ -62,7 +63,7 @@ app.delete("/delete/:id", async (req, res) => {
 app.get("/", (req, res) => res.send("Server is running"));
 
 // Route your dashboard fetches
-app.get("/api/moods", async (req, res) => {
+app.get("/api/moods", verifyToken, async (req, res) => {
   try {
     const moods = await Mood.find();
     res.json(moods);
