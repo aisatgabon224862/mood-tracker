@@ -1,135 +1,314 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+/* GLOBAL */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url("/src/assets/bg.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
 
-const AdminDashboard = () => {
-  const [moods, setMoods] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+/* School logos LEFT & RIGHT */
+.logos {
+  width: clamp(80px, 18vw, 150px);
+  height: auto;
+}
 
-  useEffect(() => {
-    const fetchMoods = async () => {
-      try {
-        const res = await fetch("https://mood-tracker-5.onrender.com/api/moods");
-        const data = await res.json();
-        setMoods(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch moods:", error);
-      }
-    };
+.deped {
+  width: clamp(80px, 18vw, 130px);
+  height: auto;
+}
 
-    fetchMoods();
-  }, []);
+/* HEADER */
+.header-row {
+  background: linear-gradient(180deg, rgb(1, 150, 33) 0%, rgb(28, 110, 45) 90%);
+  padding: 12px 20px;
+  display: flex; 
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
 
-  //  DELETE FUNCTION
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
-    if (!confirmDelete) return;
+/* SCHOOL NAME */
+.tropical {
+  background: linear-gradient(180deg, rgb(3, 33, 3) 0%, #0e701f 90%);
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: clamp(20px, 4vw, 38px);
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  flex-grow: 1;
+  margin: 0 10px;
+  letter-spacing: 1px;
+}
 
-    try {
-      const res = await fetch(`https://mood-tracker-5.onrender.com/delete/${id}`, {
-        method: "DELETE",
-      });
+/* MAIN QUESTION */
+#feel {
+  color: white;
+  font-size: clamp(25px, 6vw, 55px);
+  margin-top: 25px;
+  margin-bottom: 40px !important;
+  transition: 0.3s ease;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
+}
 
-      const data = await res.json();
-      alert(data.message);
+#feel:hover {
+  color: #e6ffe6;
+  transform: scale(1.03);
+}
 
-      // Remove the deleted item 
-      setMoods((prev) => prev.filter((item) => item._id !== id));
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Failed to delete entry.");
-    }
-  };
+/* MODERN MOOD CARDS */
+.mood-card {
+  width: 100%;
+  padding: 25px 10px;
+  background: white;
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
 
-  // Group by Grade Level
-  const groupByGrade = (items) => {
-    const groups = {};
-    items.forEach((item) => {
-      if (!groups[item.grade]) groups[item.grade] = [];
-      groups[item.grade].push(item);
-    });
-    return groups;
-  };
+.mood-card:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+}
 
-  // Group by Mood
-  const groupByMood = (items) => {
-    const moodGroups = {};
-    items.forEach((item) => {
-      if (!moodGroups[item.mood]) moodGroups[item.mood] = [];
-      moodGroups[item.mood].push(item);
-    });
-    return moodGroups;
-  };
+.emoji {
+  font-size: 2.5rem;
+}
 
-  const gradeGroups = groupByGrade(moods);
+.mood-label {
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
 
-  if (loading)
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+/* Remove Bootstrap row margins */
+.row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
 
-  return (
-    <div className="container mt-5">
-      {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="bi bi-person-workspace me-2"></i> Admin Dashboard
-        </h2>
-        <button className="btn btn-danger" onClick={() => navigate("/admin")}>
-          Logout
-        </button>
-      </div>
+/* FOOTER ICONS */
+.foot-er {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 40px;
+}
 
-      {/* Display Grouped Students */}
-      {Object.keys(gradeGroups).map((grade) => {
-        const moodGroups = groupByMood(gradeGroups[grade]);
-        return (
-          <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3 className="grade">{grade}</h3>
-            {Object.keys(moodGroups).map((mood) => (
-              <div key={mood} className="mb-3">
-                <h5 className="moody_1">{mood}</h5>
-                <table className="table table-bordered align-middle">
-                  <thead className="table-light">
-                    <tr>
-                      <th>Name</th>
-                      <th>Section</th>
-                      <th>Explanation</th>
-                      <th>Date</th>
-                      <th>Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {moodGroups[mood].map((student) => (
-                      <tr key={student._id}>
-                        <td>{student.name}</td>
-                        <td>{student.section}</td>
-                        <td>{student.explanation}</td>
-                        <td>{new Date(student.date).toLocaleDateString()}</td>
-                        <td>
-                          <button
-                            className="delete-icon-btn"
-                            onClick={() => handleDelete(student._id)}
-                          >
-                            🗑️
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        );
-      })}
-    </div>
-  );
-};
 
-export default AdminDashboard;
+.facebook {
+  width: clamp(50px, 10vw, 60px);
+  height: auto;
+  transition: 0.25s ease;
+}
+
+.youtube {
+  width: clamp(5px);
+  height: 34px;
+  transition: 0.25s ease;
+}
+
+.facebook:hover,
+.youtube:hover {
+  transform: scale(1.15);
+}
+
+/* COPYRIGHT */
+.small {
+  color: white;
+  margin-top: 30px;
+}
+.delete-icon-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.moody_1{
+  color: #f4fff4;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+}
+.grade{
+  align-items: center;
+  color: #e2e2e2;
+  font-weight:bold;
+}
+.delete-icon-btn i {
+  color: #d62828;
+  font-size: 18px;
+}
+
+.delete-icon-btn:hover i {
+  color: #b71c1c;
+  transform: scale(1.2);
+}
+
+/* RESPONSIVENESS */
+@media (max-width: 768px) {
+  .header-row {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .logos,
+  .deped {
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .foot-er img {
+    width: 50px;
+  }
+
+  .mood-card {
+    padding: 18px 8px !important;
+  }
+}
+
+/* FORM PAGE STYLING */
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.back-btn {
+  align-self: flex-start;
+  margin: 10px 0;
+  background: #ffffffcc;
+  border: 1px solid #444;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  background: #e2e2e2;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  width: 100%;
+  max-width: 760px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  margin-top: -70px;
+  color: white;
+  animation: fadeIn 0.5s ease;
+}
+
+.form-title {
+  text-align: center;
+  margin: 0 0 12px;
+  font-size: clamp(20px, 3.5vw, 30px);
+  font-weight: 700;
+  color: #f4fff4;
+}
+
+.mood-highlight {
+  color: #ffe99b;
+  font-weight: 800;
+}
+
+/* Mood form */
+.mood-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mood-form label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f7faf7;
+}
+
+.mood-form input,
+.mood-form select,
+.mood-form textarea {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.mood-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* SUBMIT BUTTON */
+.submit-btn {
+  background: #0bb24a;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 180px;
+  align-self: flex-start;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.delete-icon-btn{
+  background-color: red;
+}
+.delete-icon-btn:hover{
+  transform: scale(1.5);
+  transition: 1.5s;
+}
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(11, 178, 74, 0.18);
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 16px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    align-self: stretch;
+  }
+}
+
+/* SMOOTH FADE-IN ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
