@@ -31,12 +31,10 @@ function MoodForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.name.trim() ||
-      !formData.section.trim() ||
-      !formData.explanation.trim()
+   if (
+      !formData.section.trim() 
     ) {
-      alert("Please fill in all fields.");
+      alert("Please fill in your section.");
       return;
     }
 
