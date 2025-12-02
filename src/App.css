@@ -25,10 +25,10 @@ body {
 .header-row {
   background: linear-gradient(180deg, rgb(1, 150, 33) 0%, rgb(28, 110, 45) 90%);
   padding: 12px 20px;
-  display: flex;
+  display: flex; 
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
@@ -273,7 +273,13 @@ body {
   align-self: flex-start;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
+.delete-icon-btn{
+  background-color: red;
+}
+.delete-icon-btn:hover{
+  transform: scale(1.5);
+  transition: 1.5s;
+}
 .submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
