@@ -107,7 +107,7 @@ function MoodForm() {
                 <option value="Grade7">Grade 7</option>
                 <option value="Grade8">Grade 8</option>
                 <option value="Grade9">Grade 9</option>
-                <option value="Grade19">Grade 10</option>
+                <option value="Grade10">Grade 10</option>
                 <option value="Grade11">Grade 11</option>
                 <option value="Grade12">Grade 12</option>
               </select>
