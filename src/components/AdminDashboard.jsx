@@ -198,7 +198,7 @@ const AdminDashboard = () => {
                 <button
                   onClick={() => {
                     window.location.href =
-                      "https://moodtracker-backend.onrender.com/export/excel";
+                      "https://moodtracker-backend.onrender.com";
                   }}
                   className="btn btn-success"
                 >
