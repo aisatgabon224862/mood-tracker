@@ -115,6 +115,31 @@ const AdminDashboard = () => {
           <i className="bi bi-person-workspace me-2 align-items-center"></i>{" "}
           Admin Dashboard
         </h2>
+        <div>
+        <button
+      className="btn btn-success me-2"
+      onClick={async () => {
+        try {
+          const res = await fetch(
+            "https://moodtracker-backend.onrender.com/export/excel"
+          );
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "moods_report.xlsx";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } catch (err) {
+          console.error("Excel download failed:", err);
+          alert("Failed to download Excel file.");
+        }
+      }}
+    >
+      ⬇️ Download Excel
+    </button>
+        </div>
         <button
           className="btn btn-danger"
           onClick={() => {
@@ -195,16 +220,6 @@ const AdminDashboard = () => {
                     ))}
                   </tbody>
                 </table>
-                <button
-                  onClick={() => {
-                    window.location.href =
-                      "https://moodtracker-backend.onrender.com/export/excel";
-                  }}
-                  className="btn btn-success"
-                >
-                  {" "}
-                  ⬇️{" "}
-                </button>
               </div>
             ))}
           </div>
