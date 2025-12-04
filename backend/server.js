@@ -74,16 +74,23 @@ app.get("/api/moods", async (req, res) => {
 //  EXPORT MOODS TO EXCEL
 app.get("/export/excel", async (req, res) => {
   try {
-    const data = await Mood.find().lean();
+    const { grade, mood } = req.query; // get filters from frontend
+    let filter = {};
 
-    // Convert MongoDB → Excel Worksheet
-    const ws = XLSX.utils.json_to_sheet(data);
+    if (grade && grade !== "All") filter.grade = grade;
+    if (mood && mood !== "All") filter.mood = mood;
+
+    const data = await Mood.find(filter).lean();
+
+    // Remove MongoDB-specific fields if you want a clean Excel
+    const cleanData = data.map(({ _id, __v, ...rest }) => rest);
+
+    const ws = XLSX.utils.json_to_sheet(cleanData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Moods");
 
     const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
-    // Set headers so browser downloads file
     res.setHeader(
       "Content-Disposition",
       "attachment; filename=moods_report.xlsx"
