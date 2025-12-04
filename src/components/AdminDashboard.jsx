@@ -20,13 +20,7 @@ const AdminDashboard = () => {
     const fetchMoods = async () => {
       try {
         const res = await fetch(
-          "https://mood-tracker-5.onrender.com/api/moods",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-          }
+          "https://moodtracker-backend.onrender.com/api/moods"
         );
         const data = await res.json();
         setMoods(data);
@@ -47,13 +41,9 @@ const AdminDashboard = () => {
 
     try {
       const res = await fetch(
-        `https://mood-tracker-5.onrender.com/delete/${id}`,
+        `https://moodtracker-backend.onrender.com/delete/${id}`,
         {
           method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          },
         }
       );
       const data = await res.json();
@@ -65,7 +55,30 @@ const AdminDashboard = () => {
     }
   };
 
-  // Group by Grade
+  // Download Excel function
+  const downloadExcel = async () => {
+    try {
+      const res = await fetch(
+        "https://moodtracker-backend.onrender.com/export/excel"
+      );
+
+      if (!res.ok) throw new Error("Network response was not ok");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "moods_report.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error("Excel download failed:", err);
+      alert("Failed to download Excel file. Make sure backend is reachable.");
+    }
+  };
+
+  // Grouping and filtering
   const groupByGrade = (items) => {
     const groups = {};
     items.forEach((item) => {
@@ -75,7 +88,6 @@ const AdminDashboard = () => {
     return groups;
   };
 
-  // Group by Mood
   const groupByMood = (items) => {
     const moodGroups = {};
     items.forEach((item) => {
@@ -85,7 +97,6 @@ const AdminDashboard = () => {
     return moodGroups;
   };
 
-  // FILTER LOGIC
   const filteredMoods = moods.filter((item) => {
     const gradeMatch = selectedGrade === "All" || item.grade === selectedGrade;
     const moodMatch = selectedMood === "All" || item.mood === selectedMood;
@@ -103,44 +114,35 @@ const AdminDashboard = () => {
       </div>
     );
 
-  // Unique moods for dropdown
-  const uniqueMoods = [...new Set(moods.map((item) => item.mood))];
+  // Unique grades and moods for filters
   const uniqueGrades = [...new Set(moods.map((item) => item.grade))];
+  const uniqueMoods = [...new Set(moods.map((item) => item.mood))];
 
   return (
     <div className="container mt-5">
-      {/* Header */}
+      {/* Header + Download button */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold">
-          <i className="bi bi-person-workspace me-2 align-items-center"></i>{" "}
-          Admin Dashboard
+          <i className="bi bi-person-workspace me-2"></i> Admin Dashboard
         </h2>
-        <div>
-       <button
-  onClick={() => {
-    window.location.href =
-      "https://moodtracker-backend.onrender.com/export/excel";
-  }}
-  className="btn btn-success"
->
-  ⬇️ Download Excel
-</button>
-
+        <div className="d-flex gap-2">
+          <button className="btn btn-success" onClick={downloadExcel}>
+            ⬇️ Download Excel
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              localStorage.removeItem("adminToken");
+              navigate("/admin");
+            }}
+          >
+            Logout
+          </button>
         </div>
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            localStorage.removeItem("adminToken");
-            navigate("/admin");
-          }}
-        >
-          Logout
-        </button>
       </div>
 
       {/* Filters */}
       <div className="d-flex gap-3 mb-4">
-        {/* Grade Filter */}
         <select
           className="form-select w-auto"
           value={selectedGrade}
@@ -154,7 +156,6 @@ const AdminDashboard = () => {
           ))}
         </select>
 
-        {/* Mood Filter */}
         <select
           className="form-select w-auto"
           value={selectedMood}
@@ -169,15 +170,15 @@ const AdminDashboard = () => {
         </select>
       </div>
 
-      {/* Display Grouped Students */}
+      {/* Display grouped moods */}
       {Object.keys(gradeGroups).map((grade) => {
         const moodGroups = groupByMood(gradeGroups[grade]);
         return (
           <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3 className="grade">{grade}</h3>
+            <h3>{grade}</h3>
             {Object.keys(moodGroups).map((mood) => (
               <div key={mood} className="mb-3">
-                <h5 className="moody_1">{mood}</h5>
+                <h5>{mood}</h5>
                 <table className="table table-bordered align-middle">
                   <thead className="table-light">
                     <tr>
@@ -194,7 +195,9 @@ const AdminDashboard = () => {
                         <td>{student.name}</td>
                         <td>{student.section}</td>
                         <td>{student.explanation}</td>
-                        <td>{new Date(student.date).toLocaleDateString()}</td>
+                        <td>
+                          {new Date(student.date).toLocaleDateString()}
+                        </td>
                         <td>
                           <button
                             className="delete-icon-btn"
