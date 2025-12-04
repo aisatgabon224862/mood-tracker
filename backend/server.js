@@ -3,6 +3,7 @@ import XLSX from "xlsx";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import adminRoutes from "./routes/adminroutes.js";
 
 dotenv.config();
 
@@ -10,7 +11,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ----------------- Mood Schema -----------------
+//  Admin routes
+app.use("/api/admin", adminRoutes);
+
+//  Mood Schema
 const moodSchema = new mongoose.Schema({
   name: String,
   mood: String,
@@ -21,12 +25,44 @@ const moodSchema = new mongoose.Schema({
 });
 const Mood = mongoose.model("Mood", moodSchema);
 
-// ----------------- Routes -----------------
+app.post("/submit", async (req, res) => {
+  console.log("Received:", req.body);
+  try {
+    const { name, section, explanation, mood, grade } = req.body;
+    if (!name || !section || !explanation || !mood || !grade) {
+      console.log("Missing field(s):", { name, section, explanation, mood });
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const newMood = new Mood({ name, section, explanation, grade, mood });
+    await newMood.save();
+
+    res.json({ message: "Mood submitted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+// DELETE BUTTON
+app.delete("/delete/:id", async (req, res) => {
+  try {
+    const result = await Mood.findByIdAndDelete(req.params.id);
+
+    if (!result) {
+      return res.status(404).json({ message: "Entry not found" });
+    }
+
+    res.json({ message: "Entry deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting entry" });
+  }
+});
+
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
 
-// Fetch moods
+// Route your dashboard fetches
 app.get("/api/moods", async (req, res) => {
   try {
     const moods = await Mood.find();
@@ -35,48 +71,10 @@ app.get("/api/moods", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// Submit mood
-app.post("/submit", async (req, res) => {
-  try {
-    const { name, section, explanation, mood, grade } = req.body;
-    if (!name || !section || !explanation || !mood || !grade) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
-    const newMood = new Mood({ name, section, explanation, grade, mood });
-    await newMood.save();
-    res.json({ message: "Mood submitted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Delete mood
-app.delete("/delete/:id", async (req, res) => {
-  try {
-    const result = await Mood.findByIdAndDelete(req.params.id);
-    if (!result) return res.status(404).json({ message: "Entry not found" });
-    res.json({ message: "Entry deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Error deleting entry" });
-  }
-});
-
-// Admin login
-app.post("/api/admin/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-    return res.json({ message: "Login successful" });
-  } else {
-    return res.status(401).json({ message: "Invalid email or password" });
-  }
-});
-
-// ----------------- Export to Excel -----------------
+//  EXPORT MOODS TO EXCEL
 app.get("/export/excel", async (req, res) => {
   try {
-    const { grade, mood } = req.query;
+    const { grade, mood } = req.query; // get filters from frontend
     let filter = {};
 
     if (grade && grade !== "All") filter.grade = grade;
@@ -84,13 +82,9 @@ app.get("/export/excel", async (req, res) => {
 
     const data = await Mood.find(filter).lean();
 
-    // Clean MongoDB fields
-    const cleanData = data.map(({ _id, __v, ...rest }) => ({
-      ...rest,
-      date: new Date(rest.date).toLocaleDateString(), // format date nicely
-    }));
+    // Remove MongoDB-specific fields if you want a clean Excel
+    const cleanData = data.map(({ _id, __v, ...rest }) => rest);
 
-    // Create Excel workbook
     const ws = XLSX.utils.json_to_sheet(cleanData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Moods");
@@ -107,18 +101,31 @@ app.get("/export/excel", async (req, res) => {
     );
 
     res.send(buffer);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ message: "Error generating Excel file" });
   }
 });
-
-// ----------------- MongoDB Connection -----------------
+// Connect to MongoDB Atlas
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("Connected to MongoDB"))
-  .catch((err) => console.error("Connection error:", err));
+  .catch((err) => console.error("connection error", err));
 
-// ----------------- Start Server -----------------
+//  Admin login route
+app.post("/api/admin/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (
+    email === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
+    return res.json({ message: "Login successful" });
+  } else {
+    return res.status(401).json({ message: "Invalid email or password" });
+  }
+});
+
+//  Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
