@@ -46,7 +46,7 @@ app.post("/submit", async (req, res) => {
 // DELETE BUTTON
 app.delete("/delete/:id", async (req, res) => {
   try {
-    const result = await MoodModel.findByIdAndDelete(req.params.id);
+    const result = await Mood.findByIdAndDelete(req.params.id);
 
     if (!result) {
       return res.status(404).json({ message: "Entry not found" });
