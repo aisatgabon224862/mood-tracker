@@ -116,10 +116,11 @@ const AdminDashboard = () => {
           Admin Dashboard
         </h2>
         <div>
-       <button
+     <button
   onClick={() => {
-    window.location.href =
-      "https://moodtracker-backend.onrender.com/export/excel";
+    const gradeParam = selectedGrade || "All";
+    const moodParam = selectedMood || "All";
+    window.location.href = `https://moodtracker-backend.onrender.com/export/excel?grade=${gradeParam}&mood=${moodParam}`;
   }}
   className="btn btn-success"
 >
