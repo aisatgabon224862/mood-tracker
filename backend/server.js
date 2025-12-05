@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
-import Mood from "./models/Mood.js";
+import Mood from "./models/mood.js";
 
 dotenv.config();
 
