@@ -15,7 +15,7 @@ app.use(express.json());
 
 //  Admin routes
 app.use("/api/admin", adminRoutes);
-app.use("/api", exportRoutes);
+app.use("/api/admin", exportRoutes);
 
 //  Mood Schema
 const moodSchema = new mongoose.Schema({
