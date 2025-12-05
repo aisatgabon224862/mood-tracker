@@ -75,9 +75,9 @@ app.get("/api/moods", async (req, res) => {
   }
 });
 //  EXPORT MOODS TO EXCEL
-app.get("/export/excel", async (req, res) => {
+app.get("/api/admin/export/excel", async (req, res) => {
   try {
-    const { grade, mood } = req.query; // get filters from frontend
+    const { grade, mood } = req.query;
     let filter = {};
 
     if (grade && grade !== "All") filter.grade = grade;
@@ -85,7 +85,6 @@ app.get("/export/excel", async (req, res) => {
 
     const data = await Mood.find(filter).lean();
 
-    // Remove MongoDB-specific fields if you want a clean Excel
     const cleanData = data.map(({ _id, __v, ...rest }) => rest);
 
     const ws = XLSX.utils.json_to_sheet(cleanData);
@@ -109,6 +108,7 @@ app.get("/export/excel", async (req, res) => {
     res.status(500).json({ message: "Error generating Excel file" });
   }
 });
+
 // Connect to MongoDB Atlas
 mongoose
   .connect(process.env.MONGODB_URI)
