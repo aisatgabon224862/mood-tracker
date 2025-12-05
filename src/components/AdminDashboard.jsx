@@ -120,8 +120,9 @@ const AdminDashboard = () => {
   onClick={() => {
     const gradeParam = selectedGrade || "All";
     const moodParam = selectedMood || "All";
-   window.location.href =
-  "https://moodtracker-backend.onrender.com/api/export/excel?grade=All&mood=All";
+ window.location.href =
+  "https://moodtracker-backend.onrender.com/api/admin/export/excel?grade=All&mood=All";
+
   }}
   className="btn btn-success"
 >
