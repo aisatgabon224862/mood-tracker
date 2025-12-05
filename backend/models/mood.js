@@ -9,5 +9,5 @@ const moodSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const mood = mongoose.model("Mood", moodSchema);
-export default mood;
+const Mood = mongoose.model("Mood", moodSchema);
+export default Mood;
