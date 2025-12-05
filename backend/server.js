@@ -1,17 +1,34 @@
-
 import express from "express";
 import XLSX from "xlsx";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
-import exportRoutes from "./routes/exportRoutes.js"
+import exportRoutes from "./routes/exportRoutes.js";
 import Mood from "./models/Mood.js";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+//  CORS setup: allow your frontend and localhost
+const allowedOrigins = [
+  "https://mood-tracker-tropical-village-nhs.vercel.app",
+  "http://localhost:3000"
+];
+
+app.use(cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // allow non-browser requests (Postman, curl)
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true, // allow cookies if needed
+}));
+
 app.use(express.json());
 
 // Admin routes
@@ -52,6 +69,34 @@ app.get("/api/moods", async (req, res) => {
     res.json(moods);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Export to Excel
+app.get("/export/excel", async (req, res) => {
+  try {
+    const { grade, mood } = req.query;
+    let filter = {};
+    if (grade && grade !== "All") filter.grade = grade;
+    if (mood && mood !== "All") filter.emotion = mood;
+
+    const data = await Mood.find(filter).lean();
+    const cleanData = data.map(({ _id, __v, ...rest }) => rest);
+
+    const ws = XLSX.utils.json_to_sheet(cleanData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Moods");
+
+    const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
+    res.setHeader("Content-Disposition", "attachment; filename=moods_report.xlsx");
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.send(buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error generating Excel file" });
   }
 });
 
