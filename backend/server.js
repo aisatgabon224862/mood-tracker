@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
+import Mood from "./models/Mood.js";
 
 dotenv.config();
 
@@ -17,16 +18,7 @@ app.use(express.json());
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin", exportRoutes);
 
-//  Mood Schema
-const moodSchema = new mongoose.Schema({
-  name: String,
-  mood: String,
-  section: String,
-  grade: String,
-  explanation: String,
-  date: { type: Date, default: Date.now },
-});
-const Mood = mongoose.model("Mood", moodSchema);
+
 
 app.post("/submit", async (req, res) => {
   console.log("Received:", req.body);
