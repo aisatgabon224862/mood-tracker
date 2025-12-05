@@ -1,0 +1,197 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #e9f7ef;
+  background-image: url("https://www.transparenttextures.com/patterns/white-carbon.png");
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-div {
+  display: flex;
+  align-items: center;
+  row-gap: -20px;
+}
+.facebook {
+  justify-content: end;
+  width: 40px;
+  height: 30px;
+  margin: 0px 3px 0 auto;
+  padding-left: 10px;
+}
+.youtube {
+  justify-content: end;
+  width: 40px;
+  height: 30px;
+  margin: 0px 3px 0 auto;
+  padding-left: 10px;
+}
+.deped {
+  grid-area: deped;
+  justify-content: end;
+  width: 100px;
+  height: 100px;
+  margin: 0px 80px 0 auto;
+  padding-left: 10px;
+}
+.foot-er {
+  display: flex;
+  justify-content: end;
+  margin-top: 50px;
+  gap: 15px;
+}
+.logos {
+  justify-content: start;
+  margin: 0 auto;
+  width: 150px;
+  height: auto;
+  margin: -70px auto 50px 50px;
+}
+.tropical {
+  border-radius: 10px;
+  border: 4px solid #208137;
+  border-top-color: #0d46e5;
+  border-bottom-color: #3f434c;
+
+  text-align: center;
+  color: #106515;
+  font-size: 3em;
+  margin: 1px auto 20px auto;
+  font-weight: bold;
+}
+#containe {
+  background: white;
+  background-color: rgb(212, 224, 216);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  max-width: 700px;
+  width: 90%;
+  text-align: center;
+}
+
+#feel {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #4f7153;
+}
+
+.mood-grid {
+  display: flex;
+  flex-wrap: row;
+  justify-content: center;
+  margin-top: 50px;
+  gap: 15px;
+}
+
+.mood-card {
+  background: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mood-card:hover {
+  transform: scale(1.5);
+  transition: 0;
+  background: #dddada;
+}
+
+.emoji {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.form-container {
+  max-width: 400px;
+  margin: 0 auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+#Alogin {
+  background-color: #e9f7ef;
+  padding-top: 0px;
+  margin-top: 0px;
+}
+.mood-form label {
+  display: block;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+.header {
+  color: #0c0d10;
+  text-align: end;
+}
+
+.mood-form input,
+.mood-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.mood-form input:focus,
+.mood-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.submit-btn {
+  width: 100%;
+  background: #3b82f6;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #2563eb;
+}
+
+.back-btn {
+  display: inline-block;
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+.p-0 {
+  color: #ffffff;
+}
+.fw-bold text-primary {
+  color: #ffffff;
+}
