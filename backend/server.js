@@ -1,25 +1,40 @@
-
-
 import express from "express";
 import XLSX from "xlsx";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
-import exportRoutes from "./routes/exportRoutes.js"
+import exportRoutes from "./routes/exportRoutes.js";
 import Mood from "./models/Mood.js";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// -----------------------
+// CORS Configuration
+// -----------------------
+const corsOptions = {
+  origin: "https://mood-tracker-tropical-village-nhs.vercel.app", // frontend URL
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+  credentials: true, // if you use cookies or auth headers
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // handle preflight requests
+
 app.use(express.json());
 
+// -----------------------
 // Admin routes
+// -----------------------
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin", exportRoutes);
 
+// -----------------------
 // Submit mood
+// -----------------------
 app.post("/submit", async (req, res) => {
   const { name, section, explanation, mood: emotion, grade } = req.body;
   if (!name || !section || !explanation || !emotion || !grade) {
@@ -35,7 +50,9 @@ app.post("/submit", async (req, res) => {
   }
 });
 
+// -----------------------
 // Delete mood
+// -----------------------
 app.delete("/delete/:id", async (req, res) => {
   try {
     const result = await Mood.findByIdAndDelete(req.params.id);
@@ -46,7 +63,9 @@ app.delete("/delete/:id", async (req, res) => {
   }
 });
 
+// -----------------------
 // Get moods
+// -----------------------
 app.get("/api/moods", async (req, res) => {
   try {
     const moods = await Mood.find();
@@ -56,7 +75,9 @@ app.get("/api/moods", async (req, res) => {
   }
 });
 
+// -----------------------
 // Admin login
+// -----------------------
 app.post("/api/admin/login", (req, res) => {
   const { email, password } = req.body;
   if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
@@ -65,10 +86,14 @@ app.post("/api/admin/login", (req, res) => {
   return res.status(401).json({ message: "Invalid email or password" });
 });
 
+// -----------------------
 // Default route
+// -----------------------
 app.get("/", (req, res) => res.send("Server is running"));
 
-// Connect to MongoDB
+// -----------------------
+// Connect to MongoDB and start server
+// -----------------------
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
