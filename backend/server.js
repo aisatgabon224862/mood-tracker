@@ -11,27 +11,20 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS setup: allow your frontend and localhost
+// ✅ Apply CORS before all routes
 const allowedOrigins = [
   "https://mood-tracker-tropical-village-nhs.vercel.app",
-  "http://localhost:3000"
+  "http://localhost:3000",
 ];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if(!origin) return callback(null, true); // allow non-browser requests (Postman, curl)
-    if(allowedOrigins.indexOf(origin) === -1) {
-      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
+  origin: allowedOrigins,
   methods: ["GET", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
-// ✅ Handle preflight OPTIONS requests for all routes
+// ✅ Handle OPTIONS preflight for all routes
 app.options("*", cors());
 
 app.use(express.json());
@@ -40,79 +33,8 @@ app.use(express.json());
 app.use("/api/admin", adminRoutes);
 app.use("/api/admin", exportRoutes);
 
-// Submit mood
-app.post("/submit", async (req, res) => {
-  const { name, section, explanation, mood: emotion, grade } = req.body;
-  if (!name || !section || !explanation || !emotion || !grade) {
-    return res.status(400).json({ message: "All fields are required" });
-  }
-  try {
-    const newMood = new Mood({ name, section, explanation, grade, emotion });
-    await newMood.save();
-    res.json({ message: "Mood submitted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-// Delete mood
-app.delete("/delete/:id", async (req, res) => {
-  try {
-    const result = await Mood.findByIdAndDelete(req.params.id);
-    if (!result) return res.status(404).json({ message: "Entry not found" });
-    res.json({ message: "Entry deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: "Error deleting entry" });
-  }
-});
-
-// Get moods
-app.get("/api/moods", async (req, res) => {
-  try {
-    const moods = await Mood.find();
-    res.json(moods);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Export to Excel
-app.get("/export/excel", async (req, res) => {
-  try {
-    const { grade, mood } = req.query;
-    let filter = {};
-    if (grade && grade !== "All") filter.grade = grade;
-    if (mood && mood !== "All") filter.emotion = mood;
-
-    const data = await Mood.find(filter).lean();
-    const cleanData = data.map(({ _id, __v, ...rest }) => rest);
-
-    const ws = XLSX.utils.json_to_sheet(cleanData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Moods");
-
-    const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
-    res.setHeader("Content-Disposition", "attachment; filename=moods_report.xlsx");
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.send(buffer);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Error generating Excel file" });
-  }
-});
-
-// Admin login
-app.post("/api/admin/login", (req, res) => {
-  const { email, password } = req.body;
-  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-    return res.json({ message: "Login successful" });
-  }
-  return res.status(401).json({ message: "Invalid email or password" });
-});
+// Submit mood, Delete mood, Get moods, Export Excel ...
+// (keep your existing routes unchanged)
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
