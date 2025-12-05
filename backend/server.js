@@ -74,40 +74,7 @@ app.get("/api/moods", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-//  EXPORT MOODS TO EXCEL
-app.get("/api/admin/export/excel", async (req, res) => {
-  try {
-    const { grade, mood } = req.query;
-    let filter = {};
 
-    if (grade && grade !== "All") filter.grade = grade;
-    if (mood && mood !== "All") filter.mood = mood;
-
-    const data = await Mood.find(filter).lean();
-
-    const cleanData = data.map(({ _id, __v, ...rest }) => rest);
-
-    const ws = XLSX.utils.json_to_sheet(cleanData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Moods");
-
-    const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
-
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=moods_report.xlsx"
-    );
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-
-    res.send(buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error generating Excel file" });
-  }
-});
 
 // Connect to MongoDB Atlas
 mongoose
