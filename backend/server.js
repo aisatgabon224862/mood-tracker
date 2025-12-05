@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
+import exportRoutes from "./routes/exportRoutes.js";
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 
 //  Admin routes
 app.use("/api/admin", adminRoutes);
+app.use("/api", exportRoutes);
 
 //  Mood Schema
 const moodSchema = new mongoose.Schema({
