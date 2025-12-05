@@ -107,6 +107,39 @@ const AdminDashboard = () => {
   const uniqueMoods = [...new Set(moods.map((item) => item.mood))];
   const uniqueGrades = [...new Set(moods.map((item) => item.grade))];
 
+  // DOWNLOAD EXCEL
+  const handleDownload = async () => {
+    try {
+      const gradeParam = selectedGrade || "All";
+      const moodParam = selectedMood || "All";
+
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(
+        `https://moodtracker-backend.onrender.com/api/admin/export/excel?grade=${gradeParam}&mood=${moodParam}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("Failed to download");
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "moods_report.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Download error:", err);
+      alert("Failed to download Excel file");
+    }
+  };
+
   return (
     <div className="container mt-5">
       {/* Header */}
@@ -115,30 +148,20 @@ const AdminDashboard = () => {
           <i className="bi bi-person-workspace me-2 align-items-center"></i>{" "}
           Admin Dashboard
         </h2>
-        <div>
-    <button
-  onClick={() => {
-    const gradeParam = selectedGrade || "All";
-    const moodParam = selectedMood || "All";
- window.location.href =
-  "https://moodtracker-backend.onrender.com/api/admin/export/excel?grade=All&mood=All";
-
-  }}
-  className="btn btn-success"
->
-  ⬇️ Download Excel
-</button>
-
+        <div className="d-flex gap-2">
+          <button onClick={handleDownload} className="btn btn-success">
+            ⬇️ Download Excel
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              localStorage.removeItem("adminToken");
+              navigate("/admin");
+            }}
+          >
+            Logout
+          </button>
         </div>
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            localStorage.removeItem("adminToken");
-            navigate("/admin");
-          }}
-        >
-          Logout
-        </button>
       </div>
 
       {/* Filters */}
