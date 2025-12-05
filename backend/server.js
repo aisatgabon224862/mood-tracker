@@ -54,6 +54,30 @@ app.get("/api/moods", async (req, res) => {
   }
 });
 
+
+// Admin login
+app.post("/api/admin/login", (req, res) => {
+  const { email, password } = req.body;
+  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+    return res.json({ message: "Login successful" });
+  }
+  return res.status(401).json({ message: "Invalid email or password" });
+});
+
+// Default route
+app.get("/", (req, res) => res.send("Server is running"));
+
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log("Connected to MongoDB");
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+
 // Export to Excel
 app.get("/export/excel", async (req, res) => {
   try {
@@ -81,25 +105,3 @@ app.get("/export/excel", async (req, res) => {
     res.status(500).json({ message: "Error generating Excel file" });
   }
 });
-
-// Admin login
-app.post("/api/admin/login", (req, res) => {
-  const { email, password } = req.body;
-  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
-    return res.json({ message: "Login successful" });
-  }
-  return res.status(401).json({ message: "Invalid email or password" });
-});
-
-// Default route
-app.get("/", (req, res) => res.send("Server is running"));
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("Connected to MongoDB");
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error("MongoDB connection error:", err));
