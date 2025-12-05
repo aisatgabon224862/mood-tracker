@@ -1,6 +1,6 @@
 import express from "express";
 import XLSX from "xlsx";
-import Mood from "../models/Mood";
+import Mood from "../models/mood";
 
 const router = express.Router();
 
