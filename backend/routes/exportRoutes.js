@@ -51,4 +51,3 @@ router.get("/export/excel", cors(corsOptions), async (req, res) => {
 
 export default router;
 
-export default router;exe
