@@ -12,7 +12,8 @@ const corsOptions = {
 };
 
 // Make sure OPTIONS works
-router.options("/export/excel", cors(corsOptions));
+router.options("*", cors(corsOptions));
+router.use(cors(corsOptions));
 
 // Export Excel
 router.get("/export/excel", cors(corsOptions), async (req, res) => {
