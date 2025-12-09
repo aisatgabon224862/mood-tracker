@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 
-// ✅ Global CORS (required for export Excel + frontend)
+// Global CORS (required for export Excel + frontend)
 app.use(
   cors({
     origin: "https://mood-tracker-tropical-village-nhs.vercel.app",
@@ -22,7 +22,7 @@ app.use(
   })
 );
 
-// ✅ REQUIRED — this fixes your CORS export error
+// fixes CORS export error
 app.options("*", cors());
 
 app.use(express.json());
