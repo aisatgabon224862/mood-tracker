@@ -19,10 +19,7 @@ router.get("/export/excel", async (req, res) => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Moods");
 
-    const buffer = XLSX.write(workbook, {
-      type: "buffer",
-      bookType: "xlsx",
-    });
+    const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
 
     res.setHeader(
       "Content-Type",
