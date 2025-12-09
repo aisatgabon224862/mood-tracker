@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import XLSX from "xlsx";
-import Mood from "./models/Mood.js";
+import Mood from "../models/Mood.js";
 
 const router = express.Router();
 
