@@ -20,7 +20,7 @@ const AdminDashboard = () => {
     const fetchMoods = async () => {
       try {
         const res = await fetch(
-          "https://mood-tracker-5.onrender.com/api/moods",
+          "https://mood-tracker-5.onrender.com/backend/api/moods",
           {
             headers: {
               "Content-Type": "application/json",
