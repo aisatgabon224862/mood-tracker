@@ -1,37 +1,50 @@
-
 import express from "express";
-import XLSX from "xlsx";
 import cors from "cors";
+import XLSX from "xlsx";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+
 import adminRoutes from "./routes/adminroutes.js";
-import exportRoutes from "./routes/exportRoutes.js"
+import exportRoutes from "./routes/exportRoutes.js";
 import Mood from "./models/Mood.js";
 
 dotenv.config();
 
 const app = express();
+
+// ✅ Global CORS (required for export Excel + frontend)
 app.use(
   cors({
     origin: "https://mood-tracker-tropical-village-nhs.vercel.app",
-    methods: "GET,POST,PUT,DELETE,OPTIONS",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
+// ✅ REQUIRED — this fixes your CORS export error
+app.options("*", cors());
+
 app.use(express.json());
 
-// Admin routes
+// ==========================
+// ROUTES
+// ==========================
+
+// Admin routes (login, dashboard data, etc.)
 app.use("/api/admin", adminRoutes);
+
+// Excel export route
 app.use("/api/admin", exportRoutes);
 
 // Submit mood
 app.post("/submit", async (req, res) => {
   const { name, section, explanation, mood: emotion, grade } = req.body;
+
   if (!name || !section || !explanation || !emotion || !grade) {
     return res.status(400).json({ message: "All fields are required" });
   }
+
   try {
     const newMood = new Mood({ name, section, explanation, grade, emotion });
     await newMood.save();
@@ -66,16 +79,24 @@ app.get("/api/moods", async (req, res) => {
 // Admin login
 app.post("/api/admin/login", (req, res) => {
   const { email, password } = req.body;
-  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+
+  if (
+    email === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
     return res.json({ message: "Login successful" });
   }
+
   return res.status(401).json({ message: "Invalid email or password" });
 });
 
 // Default route
 app.get("/", (req, res) => res.send("Server is running"));
 
-// Connect to MongoDB
+// ==========================
+// DATABASE + SERVER STARTUP
+// ==========================
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
