@@ -1,35 +1,22 @@
 import express from "express";
-import cors from "cors";
 import XLSX from "xlsx";
 import Mood from "../models/Mood.js";
 
 const router = express.Router();
 
-const corsOptions = {
-  origin: "https://mood-tracker-tropical-village-nhs.vercel.app",
-  methods: "GET,OPTIONS",
-  allowedHeaders: ["Content-Type"],
-};
-
-// Make sure OPTIONS works
-router.options("*", cors(corsOptions));
-router.use(cors(corsOptions));
-
 // Export Excel
-router.get("/export/excel", cors(corsOptions), async (req, res) => {
+router.get("/export/excel", async (req, res) => {
   try {
-    const grade = req.query.grade;
-    const mood = req.query.mood;
+    const { grade, mood } = req.query;
 
     const filter = {};
-    if (grade !== "All") filter.grade = grade;
-    if (mood !== "All") filter.emotion = mood;
+    if (grade && grade !== "All") filter.grade = grade;
+    if (mood && mood !== "All") filter.emotion = mood;
 
     const data = await Mood.find(filter).lean();
 
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
-
     XLSX.utils.book_append_sheet(workbook, worksheet, "Moods");
 
     const buffer = XLSX.write(workbook, {
@@ -51,4 +38,3 @@ router.get("/export/excel", cors(corsOptions), async (req, res) => {
 });
 
 export default router;
-
