@@ -1,6 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+const BACKEND_URL = "https://mood-tracker-5.onrender.com";
 
 const AdminDashboard = () => {
   const [moods, setMoods] = useState([]);
@@ -10,147 +11,93 @@ const AdminDashboard = () => {
   const [selectedGrade, setSelectedGrade] = useState("All");
   const [selectedMood, setSelectedMood] = useState("All");
 
-  // Protect dashboard
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) navigate("/admin");
   }, [navigate]);
 
-  // Fetch moods
   useEffect(() => {
     const fetchMoods = async () => {
       try {
-        const res = await fetch(
-          "https://mood-tracker-5.onrender.com/api/moods",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-          }
-        );
+        const res = await fetch(`${BACKEND_URL}/api/moods`);
         const data = await res.json();
         setMoods(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch moods:", error);
+      } catch (err) {
+        console.error("Failed to fetch moods:", err);
       }
+      setLoading(false);
     };
     fetchMoods();
   }, []);
 
-  // DELETE FUNCTION
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this entry?"
-    );
-    if (!confirmDelete) return;
+    if (!window.confirm("Delete this entry?")) return;
 
     try {
-      const res = await fetch(
-        `https://mood-tracker-5.onrender.com/delete/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-          },
-        }
-      );
+      const res = await fetch(`${BACKEND_URL}/delete/${id}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       alert(data.message);
       setMoods((prev) => prev.filter((item) => item._id !== id));
     } catch (err) {
-      console.error("Delete error:", err);
       alert("Failed to delete entry.");
     }
   };
 
-  // Group by Grade
-  const groupByGrade = (items) => {
-    const groups = {};
-    items.forEach((item) => {
-      if (!groups[item.grade]) groups[item.grade] = [];
-      groups[item.grade].push(item);
-    });
-    return groups;
-  };
-
-  // Group by Mood
-  const groupByMood = (items) => {
-    const moodGroups = {};
-    items.forEach((item) => {
-      if (!moodGroups[item.mood]) moodGroups[item.mood] = [];
-      moodGroups[item.mood].push(item);
-    });
-    return moodGroups;
-  };
-
-  // FILTER LOGIC
   const filteredMoods = moods.filter((item) => {
     const gradeMatch = selectedGrade === "All" || item.grade === selectedGrade;
-    const moodMatch = selectedMood === "All" || item.mood === selectedMood;
+    const moodMatch = selectedMood === "All" || item.emotion === selectedMood;
     return gradeMatch && moodMatch;
   });
 
-  const gradeGroups = groupByGrade(filteredMoods);
+  const groupBy = (items, key) => {
+    return items.reduce((acc, item) => {
+      acc[item[key]] = acc[item[key]] || [];
+      acc[item[key]].push(item);
+      return acc;
+    }, {});
+  };
 
-  if (loading)
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+  const gradeGroups = groupBy(filteredMoods, "grade");
 
-  // Unique moods for dropdown
-  const uniqueMoods = [...new Set(moods.map((item) => item.mood))];
-  const uniqueGrades = [...new Set(moods.map((item) => item.grade))];
+  const uniqueMoods = [...new Set(moods.map((i) => i.emotion))];
+  const uniqueGrades = [...new Set(moods.map((i) => i.grade))];
 
-  // DOWNLOAD EXCEL
   const handleDownload = async () => {
     try {
-      const gradeParam = selectedGrade || "All";
-      const moodParam = selectedMood || "All";
-
-      const token = localStorage.getItem("adminToken");
       const res = await fetch(
-        `https://moodtracker-backend.onrender.com/api/admin/export/excel?grade=${gradeParam}&mood=${moodParam}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${BACKEND_URL}/api/admin/export/excel?grade=${selectedGrade}&mood=${selectedMood}`
       );
 
       if (!res.ok) throw new Error("Failed to download");
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
+
       const a = document.createElement("a");
       a.href = url;
       a.download = "moods_report.xlsx";
-      document.body.appendChild(a);
       a.click();
-      a.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      console.error("Download error:", err);
-      alert("Failed to download Excel file");
+      alert("Excel download failed.");
     }
   };
 
+  if (loading)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary"></div>
+      </div>
+    );
+
   return (
     <div className="container mt-5">
-      {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="fw-bold">
-          <i className="bi bi-person-workspace me-2 align-items-center"></i>{" "}
-          Admin Dashboard
-        </h2>
-        <div className="d-flex gap-2">
-          <button onClick={handleDownload} className="btn btn-success">
+        <h2 className="fw-bold">Admin Dashboard</h2>
+        <div>
+          <button onClick={handleDownload} className="btn btn-success me-2">
             ⬇️ Download Excel
           </button>
           <button
@@ -165,48 +112,44 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Filters */}
+      {/* FILTER BAR */}
       <div className="d-flex gap-3 mb-4">
-        {/* Grade Filter */}
         <select
           className="form-select w-auto"
           value={selectedGrade}
           onChange={(e) => setSelectedGrade(e.target.value)}
         >
           <option value="All">All Grades</option>
-          {uniqueGrades.map((grade) => (
-            <option key={grade} value={grade}>
-              {grade}
-            </option>
+          {uniqueGrades.map((g) => (
+            <option key={g}>{g}</option>
           ))}
         </select>
 
-        {/* Mood Filter */}
         <select
           className="form-select w-auto"
           value={selectedMood}
           onChange={(e) => setSelectedMood(e.target.value)}
         >
           <option value="All">All Moods</option>
-          {uniqueMoods.map((mood) => (
-            <option key={mood} value={mood}>
-              {mood}
-            </option>
+          {uniqueMoods.map((m) => (
+            <option key={m}>{m}</option>
           ))}
         </select>
       </div>
 
-      {/* Display Grouped Students */}
+      {/* DISPLAY GROUPED DATA */}
       {Object.keys(gradeGroups).map((grade) => {
-        const moodGroups = groupByMood(gradeGroups[grade]);
+        const moodGroups = groupBy(gradeGroups[grade], "emotion");
+
         return (
           <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3 className="grade">{grade}</h3>
+            <h3>{grade}</h3>
+
             {Object.keys(moodGroups).map((mood) => (
               <div key={mood} className="mb-3">
-                <h5 className="moody_1">{mood}</h5>
-                <table className="table table-bordered align-middle">
-                  <thead className="table-light">
+                <h5>{mood}</h5>
+                <table className="table table-bordered">
+                  <thead>
                     <tr>
                       <th>Name</th>
                       <th>Section</th>
@@ -216,16 +159,18 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {moodGroups[mood].map((student) => (
-                      <tr key={student._id}>
-                        <td>{student.name}</td>
-                        <td>{student.section}</td>
-                        <td>{student.explanation}</td>
-                        <td>{new Date(student.date).toLocaleDateString()}</td>
+                    {moodGroups[mood].map((item) => (
+                      <tr key={item._id}>
+                        <td>{item.name}</td>
+                        <td>{item.section}</td>
+                        <td>{item.explanation}</td>
+                        <td>
+                          {new Date(item.createdAt).toLocaleDateString()}
+                        </td>
                         <td>
                           <button
-                            className="delete-icon-btn"
-                            onClick={() => handleDelete(student._id)}
+                            className="btn btn-danger"
+                            onClick={() => handleDelete(item._id)}
                           >
                             🗑️
                           </button>
