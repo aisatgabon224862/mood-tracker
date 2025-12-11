@@ -33,7 +33,7 @@ app.post("/submit", async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
-    const newMood = new Mood({ name, section, explanation, grade, emotion });
+    const newMood = new Mood({ section, grade, emotion });
     await newMood.save();
     res.json({ message: "Mood submitted successfully" });
   } catch (err) {
