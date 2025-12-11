@@ -29,7 +29,7 @@ app.use("/api/admin", exportRoutes);
 // Submit mood
 app.post("/submit", async (req, res) => {
   const { name, section, explanation, mood: emotion, grade } = req.body;
-  if (!name || !section || !explanation || !emotion || !grade) {
+  if ( !section || !emotion || !grade) {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
