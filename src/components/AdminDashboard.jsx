@@ -142,7 +142,7 @@ const AdminDashboard = () => {
         const moodGroups = groupBy(gradeGroups[grade], "emotion");
 
         return (
-          <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
+          <div key={grade} className="dashboard-card">
             <h3 className="grade-title">{grade}</h3>
 
             {Object.keys(moodGroups).map((mood) => (
@@ -169,7 +169,7 @@ const AdminDashboard = () => {
                         </td>
                         <td>
                           <button
-                            className="btn btn-danger"
+                            className="btn-delete-icon"
                             onClick={() => handleDelete(item._id)}
                           >
                             🗑️
