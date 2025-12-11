@@ -29,11 +29,11 @@ app.use("/api/admin", exportRoutes);
 // Submit mood
 app.post("/submit", async (req, res) => {
   const { name, section, explanation, mood: emotion, grade } = req.body;
-  if ( !section || !emotion || !grade) {
+  if (!name || !section || !explanation || !emotion || !grade) {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
-    const newMood = new Mood({ section, grade, emotion });
+    const newMood = new Mood({ name, section, explanation, grade, emotion });
     await newMood.save();
     res.json({ message: "Mood submitted successfully" });
   } catch (err) {
