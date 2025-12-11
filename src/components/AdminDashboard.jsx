@@ -143,11 +143,11 @@ const AdminDashboard = () => {
 
         return (
           <div key={grade} className="mb-4 p-3 border rounded shadow-sm">
-            <h3>{grade}</h3>
+            <h3 className="grade-title">{grade}</h3>
 
             {Object.keys(moodGroups).map((mood) => (
               <div key={mood} className="mb-3">
-                <h5>{mood}</h5>
+                <h4 className="mood-title">{mood}</h4>
                 <table className="table table-bordered">
                   <thead>
                     <tr>
