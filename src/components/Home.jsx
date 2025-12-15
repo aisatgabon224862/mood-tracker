@@ -47,7 +47,7 @@ function Home() {
           ))}
         </div>
 
-        <p className="small">© {new Date().getFullYear()} Mood Tracker</p>
+        <p className="small">© {new Date().getFullYear()} Mood Tracker <i>forged by:</i><b>Kurt Gabon</b></p>
 
         <footer className="foot-er mb-3">
           <a
