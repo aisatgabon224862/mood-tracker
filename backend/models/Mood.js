@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const moodSchema = new mongoose.Schema({
+  No: { type: number, required: false},
   name: { type: String, required: false },
   section: { type: String, required: true },
   grade: { type: String, required: true },
