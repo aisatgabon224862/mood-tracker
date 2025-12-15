@@ -180,11 +180,11 @@ const AdminDashboard = () => {
 
             {Object.keys(moodGroups).map((mood) => (
               <div key={mood} className="mb-3">
-                <h4 className="mood-title">{mood}</h4>
                 <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th>no.</th>
+                      <th>No.</th>
+                      <th>Mood</th>
                       <th>Name</th>
                       <th>Section</th>
                       <th>Explanation</th>
@@ -196,6 +196,7 @@ const AdminDashboard = () => {
                     {moodGroups[mood].map((item,index) => (
                       <tr key={item._id}>
                         <td>{index+1}</td>
+                        <td>{item.mood}</td>
                         <td>{item.name}</td>
                         <td>{item.section}</td>
                         <td>{item.explanation}</td>
