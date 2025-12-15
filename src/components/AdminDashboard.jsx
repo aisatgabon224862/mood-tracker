@@ -154,6 +154,7 @@ const AdminDashboard = () => {
                   <th>Section</th>
                   <th>Explanation</th>
                   <th>Date</th>
+                  <th>Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -165,6 +166,12 @@ const AdminDashboard = () => {
                     <td>{item.section}</td>
                     <td>{item.explanation}</td>
                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                    <td><button
+                            className="btn-delete-icon"
+                            onClick={() => handleDelete(item._id)}
+                          >
+                            🗑️
+                          </button></td>
                   </tr>
                 ))}
               </tbody>
