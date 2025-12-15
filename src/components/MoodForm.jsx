@@ -53,11 +53,11 @@ function MoodForm() {
       }
 
       const data = await response.json();
-      alert(data?.message || "Submitted successfully");
+      alert("Thank you for sharing, Your feelings are valid.");
       navigate("/");
     } catch (error) {
       console.error("Submit error:", error);
-      alert("Failed to submit. Please check your network.");
+      alert("submit failed, Please check your network ");
     } finally {
       setSubmitting(false);
     }
