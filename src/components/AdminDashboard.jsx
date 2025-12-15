@@ -149,6 +149,7 @@ const AdminDashboard = () => {
               <thead>
                 <tr>
                   <th>Name</th>
+                  <th>Grade Level</th>
                   <th>Section</th>
                   <th>Explanation</th>
                   <th>Date</th>
@@ -158,6 +159,7 @@ const AdminDashboard = () => {
                 {filteredMoods.map((item) => (
                   <tr key={item._id}>
                     <td>{item.name}</td>
+                    <td>{item.selectedGrade}</td>
                     <td>{item.section}</td>
                     <td>{item.explanation}</td>
                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>
