@@ -15,7 +15,31 @@ function MoodForm() {
   const mood = searchParams.get("mood") || "";
   const rawEmoji = searchParams.get("emoji") || "";
   const emoji = decodeURIComponent(rawEmoji);
-
+  const [showModal, setShowModal] = useState(false);
+  const [advice, setAdvice] = useState("");
+  const getAdvice = (mood) => {
+    switch (mood) {
+      case "Happy":
+        setAdvice("Keep spreading the positive vibes!");
+        break;
+      case "Sad":
+        setAdvice(
+          "Its okay to feel this way, You may talk to your guidance counselor"
+        );
+        break;
+      case "Angry":
+        setAdvice("Take a deep breath");
+        break;
+      case "Tired":
+        setAdvice("Dont be guilty to have a rest");
+        break;
+      case "Excited":
+        setAdvice("Wow we feel excited for you");
+        break;
+      default:
+        setAdvice("Dont be scared, God is with you!");
+    }
+  };
   const [formData, setFormData] = useState({
     name: "",
     section: "",
@@ -28,25 +52,76 @@ function MoodForm() {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  9;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.section.trim() 
-    ) {
+    if (!formData.section.trim()) {
       alert("Please fill in your section.");
       return;
     }
-
+    setAdvice(getAdvice(mood));
+    setShowModal(true);
     setSubmitting(true);
+    {showModal && (
+  <div className="modal-overlay">
+    <div className="modal-box">
+      <h3>💬 A Message for You</h3>
+      <p>{advice}</p>
+
+      <div className="modal-actions">
+        <button
+          className="btn btn-secondary"
+          onClick={() => setShowModal(false)}
+        >
+          Cancel
+        </button>
+           <button
+          className="btn btn-primary"
+          onClick={async () => {
+            setShowModal(false);
+            setSubmitting(true);
+
+            try {
+              const response = await fetch(
+                "https://mood-tracker-5.onrender.com/submit",
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ ...formData, mood }),
+                }
+              );
+
+              if (!response.ok) {
+                throw new Error(await response.text());
+              }
+
+              alert("Thank you for sharing. Your feelings are valid.");
+              navigate("/");
+            } catch (error) {
+              alert("Submit failed. Please check your network.");
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          OK, Submit
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
     try {
-      const response = await fetch("https://mood-tracker-5.onrender.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, mood }),
-      });
+      const response = await fetch(
+        "https://mood-tracker-5.onrender.com/submit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, mood }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(await response.text());
@@ -57,7 +132,7 @@ function MoodForm() {
       navigate("/");
     } catch (error) {
       console.error("Submit error:", error);
-      alert("Submission failed, Please check your network ");
+      alert("submit failed, Please check your network ");
     } finally {
       setSubmitting(false);
     }
@@ -80,8 +155,8 @@ function MoodForm() {
           </button>
 
           <h2 className="form-title">
-            You are feeling{" "}
-            <span className="mood-highlight">{mood}</span> {emoji} today
+            You are feeling <span className="mood-highlight">{mood}</span>{" "}
+            {emoji} today
           </h2>
           <form onSubmit={handleSubmit} className="mood-form">
             {/* Name */}
@@ -137,16 +212,11 @@ function MoodForm() {
               />
             </label>
             {/* Submit */}
-            <button
-              className="submit-btn"
-              type="submit"
-              disabled={submitting}
-            >
+            <button className="submit-btn" type="submit" disabled={submitting}>
               {submitting ? "Submitting..." : "Submit"}
             </button>
           </form>
         </div>
-
         {/* Footer icons */}
         <footer className="d-flex justify-content-center mt-4 gap-3">
           <a
@@ -165,11 +235,10 @@ function MoodForm() {
             <img src={youtube} alt="youtube" className="youtube" />
           </a>
         </footer>
-
         <p className="header small text-center mt-2">
-          © {new Date().getFullYear()} Mood Tracker </p>
+          © {new Date().getFullYear()} Mood Tracker{" "}
+        </p>
         <i>developed by:</i> <b>Kurt Gabon</b>
-      
       </div>
     </>
   );
