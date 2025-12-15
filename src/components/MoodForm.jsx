@@ -57,7 +57,7 @@ function MoodForm() {
       navigate("/");
     } catch (error) {
       console.error("Submit error:", error);
-      alert("submit failed, Please check your network ");
+      alert("Submission failed, Please check your network ");
     } finally {
       setSubmitting(false);
     }
