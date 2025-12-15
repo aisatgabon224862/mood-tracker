@@ -79,7 +79,7 @@ const AdminDashboard = () => {
       const a = document.createElement("a");
       a.href = url;
       a.download = "moods_report.xlsx";
-      a.click();a
+      a.click();
       window.URL.revokeObjectURL(url);
     } catch (err) {
       alert("Excel download failed.");
