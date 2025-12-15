@@ -79,7 +79,7 @@ const AdminDashboard = () => {
       const a = document.createElement("a");
       a.href = url;
       a.download = "moods_report.xlsx";
-      a.click();
+      a.click();a
       window.URL.revokeObjectURL(url);
     } catch (err) {
       alert("Excel download failed.");
@@ -145,8 +145,8 @@ const AdminDashboard = () => {
               {selectedMood !== "All" && `• ${selectedMood}`}
             </h3>
 
-            <table className="table table-bordered">
-              <thead>
+            <table className="table table-hover align-middle">
+              <thead className="table-primary">
                 <tr>
                   <th>Name</th>
                   <th>Section</th>
@@ -168,7 +168,7 @@ const AdminDashboard = () => {
           </div>
         )}
 
-      {/* DISPLAY GROUPED DATA */}
+        {/* DISPLAY GROUPED DATA */}
       {!isFiltered && Object.keys(gradeGroups).map((grade) => {
         const moodGroups = groupBy(gradeGroups[grade], "emotion");
 
@@ -196,7 +196,7 @@ const AdminDashboard = () => {
                         <td>{item.section}</td>
                         <td>{item.explanation}</td>
                         <td>
-                        !isFiltered &&     {new Date(item.createdAt).toLocaleDateString()}
+                          {new Date(item.createdAt).toLocaleDateString()}
                         </td>
                         <td>
                           <button
