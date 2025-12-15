@@ -196,7 +196,7 @@ const AdminDashboard = () => {
                     {moodGroups[mood].map((item,index) => (
                       <tr key={item._id}>
                         <td>{index+1}</td>
-                        <td>{item.mood}</td>
+                        <td>{mood}</td>
                         <td>{item.name}</td>
                         <td>{item.section}</td>
                         <td>{item.explanation}</td>
