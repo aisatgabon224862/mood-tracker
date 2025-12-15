@@ -10,7 +10,8 @@ const AdminDashboard = () => {
 
   const [selectedGrade, setSelectedGrade] = useState("All");
   const [selectedMood, setSelectedMood] = useState("All");
-
+  const isFiltered =
+  selectedGrade !== "All" || selectedMood !== "All";
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) navigate("/admin");
@@ -136,9 +137,39 @@ const AdminDashboard = () => {
           ))}
         </select>
       </div>
+              {/* FILTERED (SINGLE TABLE VIEW) */}
+        {isFiltered && (
+          <div className="dashboard-card">
+            <h3 className="grade-title">
+              {selectedGrade !== "All" ? selectedGrade : "All Grades"}{" "}
+              {selectedMood !== "All" && `• ${selectedMood}`}
+            </h3>
+
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Section</th>
+                  <th>Explanation</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMoods.map((item) => (
+                  <tr key={item._id}>
+                    <td>{item.name}</td>
+                    <td>{item.section}</td>
+                    <td>{item.explanation}</td>
+                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
       {/* DISPLAY GROUPED DATA */}
-      {Object.keys(gradeGroups).map((grade) => {
+      {!isFiltered && Object.keys(gradeGroups).map((grade) => {
         const moodGroups = groupBy(gradeGroups[grade], "emotion");
 
         return (
@@ -165,7 +196,7 @@ const AdminDashboard = () => {
                         <td>{item.section}</td>
                         <td>{item.explanation}</td>
                         <td>
-                          {new Date(item.createdAt).toLocaleDateString()}
+                        !isFiltered &&     {new Date(item.createdAt).toLocaleDateString()}
                         </td>
                         <td>
                           <button
