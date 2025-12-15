@@ -150,6 +150,7 @@ const AdminDashboard = () => {
                 <tr>
                   <th>Name</th>
                   <th>Grade Level</th>
+                  <th>Mood</th>
                   <th>Section</th>
                   <th>Explanation</th>
                   <th>Date</th>
@@ -160,6 +161,7 @@ const AdminDashboard = () => {
                   <tr key={item._id}>
                     <td>{item.name}</td>
                     <td>{item.grade}</td>
+                    <td>{item.emotion}</td>
                     <td>{item.section}</td>
                     <td>{item.explanation}</td>
                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>
