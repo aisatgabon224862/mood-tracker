@@ -14,6 +14,7 @@ function Home() {
     { emoji: "😡", label: "Angry" },
     { emoji: "😴", label: "Tired" },
     { emoji: "😎", label: "Excited" },
+    { emoji: "😨", label: "Scared"}
   ];
 
   return (
