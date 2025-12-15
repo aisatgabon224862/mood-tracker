@@ -145,8 +145,8 @@ const AdminDashboard = () => {
               {selectedMood !== "All" && `• ${selectedMood}`}
             </h3>
 
-            <table className="table table-hover align-middle">
-              <thead className="table-primary">
+            <table className="table table-bordered">
+              <thead>
                 <tr>
                   <th>Name</th>
                   <th>Section</th>
@@ -182,6 +182,7 @@ const AdminDashboard = () => {
                 <table className="table table-bordered">
                   <thead>
                     <tr>
+                      <th>no.</th>
                       <th>Name</th>
                       <th>Section</th>
                       <th>Explanation</th>
@@ -190,8 +191,9 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {moodGroups[mood].map((item) => (
+                    {moodGroups[mood].map((item,index) => (
                       <tr key={item._id}>
+                        <td>{index+1}</td>
                         <td>{item.name}</td>
                         <td>{item.section}</td>
                         <td>{item.explanation}</td>
