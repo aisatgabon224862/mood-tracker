@@ -167,8 +167,9 @@ function MoodForm() {
         </footer>
 
         <p className="header small text-center mt-2">
-          © {new Date().getFullYear()} Mood Tracker <i>developed by:</i> <b>Kurt Gabon</b>
-        </p>
+          © {new Date().getFullYear()} Mood Tracker </p>
+        <i>developed by:</i> <b>Kurt Gabon</b>
+      
       </div>
     </>
   );
