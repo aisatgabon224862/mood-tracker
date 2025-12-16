@@ -36,7 +36,7 @@ const AdminDashboard = () => {
       const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer${localStorage.getItem("adminToken")}`,
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
         },
       });
       if (!res.ok) throw new Error("failed to delete all entries");
@@ -121,8 +121,6 @@ const AdminDashboard = () => {
           >
             🗑️ Delete All Records
           </button>{" "}
-        </div>
-        <div>
           <button onClick={handleDownload} className="btn btn-success me-2">
             ⬇️ Download Excel
           </button>
