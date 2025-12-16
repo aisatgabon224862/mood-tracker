@@ -8,12 +8,15 @@ import auth from "../middleware/auth.js";
 const router = express.Router();
 
 // Admin Login
-router.delete("/moods/delete-all", auth, async (req, res) => {
+router.delete("/moods/delete-all", verifyToken, async (req, res) => {
+  console.log("Delete all request by:", req.admin);
+
   try {
     await Mood.deleteMany({});
-    res.json({ message: "All entry deleted succesfully" });
+    res.json({ message: "All entries deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "failed to delete all enrty" });
+    console.error("Delete all error:", err);
+    res.status(500).json({ message: "Failed to delete all entries" });
   }
 });
 
