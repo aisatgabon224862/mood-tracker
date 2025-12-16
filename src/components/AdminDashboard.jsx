@@ -34,10 +34,7 @@ const AdminDashboard = () => {
     if (confirm !== "DELETE ALL") return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
+        method: "DELETE"},
       });
       if (!res.ok) throw new Error("failed to delete all entries");
       alert("All entries deleted succesfully");
