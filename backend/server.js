@@ -42,14 +42,6 @@ app.post("/submit", async (req, res) => {
 });
 
 // Delete mood
-app.delete("/moods/delete-all", async (req, res) => {
-  try {
-    await Mood.deleteMany({});
-    res.json({ message: "All entry deleted succesfully" });
-  } catch (err) {
-    res.status(500).json({ message: "failed to delete all enrty" });
-  }
-});
 app.delete("/delete/:id", async (req, res) => {
   try {
     const result = await Mood.findByIdAndDelete(req.params.id);
