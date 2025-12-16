@@ -8,7 +8,7 @@ import auth from "../middleware/auth.js";
 const router = express.Router();
 
 // Admin Login
-router.delete("/mood/delete-all", auth, async (req, res) => {
+router.delete("/moods/delete-all", auth, async (req, res) => {
   try {
     await Mood.deleteMany({});
     res.json({ message: "All entry deleted succesfully" });
