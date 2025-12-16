@@ -1,11 +1,10 @@
-
 import express from "express";
 import XLSX from "xlsx";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import adminRoutes from "./routes/adminroutes.js";
-import exportRoutes from "./routes/exportRoutes.js"
+import exportRoutes from "./routes/exportRoutes.js";
 import Mood from "./models/Mood.js";
 
 dotenv.config();
@@ -29,7 +28,7 @@ app.use("/api/admin", exportRoutes);
 // Submit mood
 app.post("/submit", async (req, res) => {
   const { name, section, explanation, mood: emotion, grade } = req.body;
-  if ( !section || !emotion || !grade) {
+  if (!section || !emotion || !grade) {
     return res.status(400).json({ message: "All fields are required" });
   }
   try {
@@ -43,6 +42,14 @@ app.post("/submit", async (req, res) => {
 });
 
 // Delete mood
+app.delete("/moods/delete-all", async (req, res) => {
+  try {
+    await Mood.deleteMany({});
+    res.json({ message: "All entry deleted succesfully" });
+  } catch (err) {
+    res.status(500).json({ message: "failed to delete all enrty" });
+  }
+});
 app.delete("/delete/:id", async (req, res) => {
   try {
     const result = await Mood.findByIdAndDelete(req.params.id);
@@ -66,7 +73,10 @@ app.get("/api/moods", async (req, res) => {
 // Admin login
 app.post("/api/admin/login", (req, res) => {
   const { email, password } = req.body;
-  if (email === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
+  if (
+    email === process.env.ADMIN_USERNAME &&
+    password === process.env.ADMIN_PASSWORD
+  ) {
     return res.json({ message: "Login successful" });
   }
   return res.status(401).json({ message: "Invalid email or password" });
