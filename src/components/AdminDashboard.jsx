@@ -29,39 +29,38 @@ const AdminDashboard = () => {
     };
     fetchMoods();
   }, []);
- const handleDeleteAll = async () => {
-  const confirm = window.prompt("Type DELETE ALL to confirm");
-  if (confirm !== "DELETE ALL") return;
+  const handleDeleteAll = async () => {
+    const confirm = window.prompt("Type DELETE ALL to confirm");
+    if (confirm !== "DELETE ALL") return;
 
-  try {
-    const token = localStorage.getItem("adminToken");
-    if (!token) {
-      alert("You must be logged in");
-      return;
-    }
+    try {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("You must be logged in");
+        return;
+      }
 
-    const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+      const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    if (!res.ok) {
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Delete failed");
+      }
+
       const data = await res.json();
-      throw new Error(data.message || "Delete failed");
+      alert(data.message);
+      setMoods([]); // clear frontend state
+    } catch (err) {
+      console.error("Delete all error:", err);
+      alert(err.message);
     }
-
-    const data = await res.json();
-    alert(data.message);
-    setMoods([]); // clear frontend state
-  } catch (err) {
-    console.error("error deleting", err);
-    alert(err.message);
-  }
-};
-
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
