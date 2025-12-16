@@ -3,12 +3,12 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import Mood from "../models/Mood.js";
-import auth from "../middleware/auth.js";
+
 
 const router = express.Router();
 
 // Admin Login
-router.delete("/moods/delete-all", auth, async (req, res) => {
+router.delete("/moods/delete-all", async (req, res) => {
   try {
     await Mood.deleteMany({});
     res.json({ message: "All entry deleted succesfully" });
