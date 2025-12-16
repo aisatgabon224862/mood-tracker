@@ -29,28 +29,36 @@ const AdminDashboard = () => {
     };
     fetchMoods();
   }, []);
-  const handleDeleteAll = async () => {
+ const handleDeleteAll = async () => {
   const confirm = window.prompt("Type DELETE ALL to confirm");
   if (confirm !== "DELETE ALL") return;
 
   try {
-    const res = await fetch(
-      `${BACKEND_URL}/api/admin/moods/delete-all`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-        },
-      }
-    );
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      alert("You must be logged in");
+      return;
+    }
 
-    if (!res.ok) throw new Error("Delete failed");
+    const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-    alert("All entries deleted successfully");
-    setMoods([]);
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.message || "Delete failed");
+    }
+
+    const data = await res.json();
+    alert(data.message);
+    setMoods([]); // clear frontend state
   } catch (err) {
-    console.error(err);
-    alert("Failed to delete all entries");
+    console.error("error deleting", err);
+    alert(err.message);
   }
 };
 
