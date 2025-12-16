@@ -10,8 +10,7 @@ const AdminDashboard = () => {
 
   const [selectedGrade, setSelectedGrade] = useState("All");
   const [selectedMood, setSelectedMood] = useState("All");
-  const isFiltered =
-  selectedGrade !== "All" || selectedMood !== "All";
+  const isFiltered = selectedGrade !== "All" || selectedMood !== "All";
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) navigate("/admin");
@@ -30,6 +29,23 @@ const AdminDashboard = () => {
     };
     fetchMoods();
   }, []);
+  const handleDeleteAll = async () => {
+    const confirm = window.prompt("Type DELETE ALL, to confirm");
+    if (confirm !== "DELETE ALL") return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/moods/delete-all`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer${localStorage.getItem("adminToken")}`,
+        },
+      });
+      if (!res.ok) throw new Error("failed to delete all entries");
+      alert("All entries deleted succesfully");
+      setMoods([]);
+    } catch (err) {
+      alert("failed to delete all entries");
+    }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
@@ -98,6 +114,15 @@ const AdminDashboard = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="fw-bold">Admin Dashboard</h2>
         <div>
+          <button
+            disabled={moods.length === 0}
+            className="btn btn-outline-danger"
+            onClick={handleDeleteAll}
+          >
+            🗑️ Delete All Records
+          </button>{" "}
+        </div>
+        <div>
           <button onClick={handleDownload} className="btn btn-success me-2">
             ⬇️ Download Excel
           </button>
@@ -137,98 +162,101 @@ const AdminDashboard = () => {
           ))}
         </select>
       </div>
-              {/* FILTERED (SINGLE TABLE VIEW) */}
-        {isFiltered && (
-          <div className="dashboard-card">
-            <h3 className="grade-title">
-              {selectedGrade !== "All" ? selectedGrade : "All Grades"}{" "}
-              {selectedMood !== "All" && `• ${selectedMood}`}
-            </h3>
+      {/* FILTERED (SINGLE TABLE VIEW) */}
+      {isFiltered && (
+        <div className="dashboard-card">
+          <h3 className="grade-title">
+            {selectedGrade !== "All" ? selectedGrade : "All Grades"}{" "}
+            {selectedMood !== "All" && `• ${selectedMood}`}
+          </h3>
 
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Grade Level</th>
-                  <th>Mood</th>
-                  <th>Section</th>
-                  <th>Explanation</th>
-                  <th>Date</th>
-                  <th>Delete</th>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Grade Level</th>
+                <th>Mood</th>
+                <th>Section</th>
+                <th>Explanation</th>
+                <th>Date</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredMoods.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.name}</td>
+                  <td>{item.grade}</td>
+                  <td>{item.emotion}</td>
+                  <td>{item.section}</td>
+                  <td>{item.explanation}</td>
+                  <td>{new Date(item.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    <button
+                      className="btn-delete-icon"
+                      onClick={() => handleDelete(item._id)}
+                    >
+                      🗑️
+                    </button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredMoods.map((item) => (
-                  <tr key={item._id}>
-                    <td>{item.name}</td>
-                    <td>{item.grade}</td>
-                    <td>{item.emotion}</td>
-                    <td>{item.section}</td>
-                    <td>{item.explanation}</td>
-                    <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                    <td><button
-                            className="btn-delete-icon"
-                            onClick={() => handleDelete(item._id)}
-                          >
-                            🗑️
-                          </button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-        {/* DISPLAY GROUPED DATA */}
-      {!isFiltered && Object.keys(gradeGroups).map((grade) => {
-        const moodGroups = groupBy(gradeGroups[grade], "emotion");
+      {/* DISPLAY GROUPED DATA */}
+      {!isFiltered &&
+        Object.keys(gradeGroups).map((grade) => {
+          const moodGroups = groupBy(gradeGroups[grade], "emotion");
 
-        return (
-          <div key={grade} className="dashboard-card">
-            <h3 className="grade-title">{grade}</h3>
+          return (
+            <div key={grade} className="dashboard-card">
+              <h3 className="grade-title">{grade}</h3>
 
-            {Object.keys(moodGroups).map((mood) => (
-              <div key={mood} className="mb-3">
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>No.</th>
-                      <th>Mood</th>
-                      <th>Name</th>
-                      <th>Section</th>
-                      <th>Explanation</th>
-                      <th>Date</th>
-                      <th>Remove</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {moodGroups[mood].map((item,index) => (
-                      <tr key={item._id}>
-                        <td>{index+1}</td>
-                        <td>{mood}</td>
-                        <td>{item.name}</td>
-                        <td>{item.section}</td>
-                        <td>{item.explanation}</td>
-                        <td>
-                          {new Date(item.createdAt).toLocaleDateString()}
-                        </td>
-                        <td>
-                          <button
-                            className="btn-delete-icon"
-                            onClick={() => handleDelete(item._id)}
-                          >
-                            🗑️
-                          </button>
-                        </td>
+              {Object.keys(moodGroups).map((mood) => (
+                <div key={mood} className="mb-3">
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>Mood</th>
+                        <th>Name</th>
+                        <th>Section</th>
+                        <th>Explanation</th>
+                        <th>Date</th>
+                        <th>Remove</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        );
-      })}
+                    </thead>
+                    <tbody>
+                      {moodGroups[mood].map((item, index) => (
+                        <tr key={item._id}>
+                          <td>{index + 1}</td>
+                          <td>{mood}</td>
+                          <td>{item.name}</td>
+                          <td>{item.section}</td>
+                          <td>{item.explanation}</td>
+                          <td>
+                            {new Date(item.createdAt).toLocaleDateString()}
+                          </td>
+                          <td>
+                            <button
+                              className="btn-delete-icon"
+                              onClick={() => handleDelete(item._id)}
+                            >
+                              🗑️
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </div>
+          );
+        })}
     </div>
   );
 };
