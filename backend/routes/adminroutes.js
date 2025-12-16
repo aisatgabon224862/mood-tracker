@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../models/admin.js";
 import Mood from "../models/Mood.js";
-
+import auth from "../middleware/auth.js";
 
 const router = express.Router();
 
